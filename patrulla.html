@@ -34,7 +34,7 @@
       font-family: 'Press Start 2P', monospace;
     }
 
-    /* Botones Arcade con profundidad 3D */
+    /* Botones Arcade 3D */
     .btn-arcade-gold {
       background: linear-gradient(180deg, #fde047 0%, #eab308 50%, #ca8a04 100%);
       box-shadow: 0 6px 0 #854d0e, 0 10px 18px rgba(0,0,0,0.5);
@@ -63,20 +63,19 @@
       box-shadow: 0 2px 0 #075985;
     }
 
-    /* Bordes y marcos de pantalla */
+    .btn-arcade-green {
+      background: linear-gradient(180deg, #4ade80 0%, #16a34a 50%, #15803d 100%);
+      box-shadow: 0 6px 0 #14532d, 0 10px 18px rgba(0,0,0,0.5);
+    }
+    .btn-arcade-green:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #14532d;
+    }
+
     .game-bezel {
       background: linear-gradient(145deg, #1e293b, #0f172a);
       border: 4px solid #facc15;
       box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(250, 204, 21, 0.2);
-    }
-
-    /* Animaciones suaves */
-    @keyframes pulse-boss {
-      0% { transform: scale(1); filter: drop-shadow(0 0 10px #f43f5e); }
-      100% { transform: scale(1.05); filter: drop-shadow(0 0 22px #ef4444); }
-    }
-    .boss-pulse {
-      animation: pulse-boss 1.2s infinite alternate ease-in-out;
     }
 
     canvas {
@@ -90,64 +89,80 @@
   <!-- VISTA 1: MENÚ DE INICIO Y SELECCIÓN DE PERSONAJES -->
   <main id="viewSelection" class="w-full max-w-xl flex flex-col items-center text-center">
     
-    <div class="mb-4">
-      <div class="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 px-4 py-1.5 rounded-full border border-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
+    <div class="mb-3">
+      <div class="inline-flex items-center gap-2 bg-amber-500/20 text-amber-300 px-4 py-1 rounded-full border border-amber-400 text-xs font-bold uppercase tracking-wider mb-2">
         <span>🐾</span> ¡LA BANDA DEL TECHO EN ACCIÓN! <span>🐾</span>
       </div>
       <h1 class="font-arcade text-3xl sm:text-4xl text-yellow-300 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] leading-tight">
         PATRULLA PERRUNA
       </h1>
-      <p class="text-sm sm:text-base font-bold text-slate-300 mt-1">
-        ¡Cruza los techos, esquiva trampas y derrota al <span class="text-rose-400 font-extrabold">Gato Gigante ROSQUILLA</span>!
+      <p class="text-xs sm:text-sm font-bold text-slate-300 mt-1">
+        ¡Cruza 4 Mundos y vence a los Jefes Felinos hasta el <span class="text-rose-400 font-extrabold">REY ROSQUILLA</span>!
       </p>
     </div>
 
-    <!-- Tarjetas de Selección de Perritos -->
-    <div class="w-full bg-slate-900/90 rounded-3xl p-4 sm:p-6 border-2 border-yellow-400/60 shadow-2xl backdrop-blur-md">
-      <h2 class="text-base font-arcade text-amber-300 mb-3 uppercase tracking-wide">
+    <!-- Panel de Selección de Perrito y Dificultad -->
+    <div class="w-full bg-slate-900/90 rounded-3xl p-4 sm:p-5 border-2 border-yellow-400/60 shadow-2xl backdrop-blur-md">
+      <h2 class="text-sm sm:text-base font-arcade text-amber-300 mb-2.5 uppercase tracking-wide">
         Elige a tu Héroe Perruno:
       </h2>
 
-      <!-- Rejilla con los perritos de la foto -->
-      <div id="dogGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 sm:gap-3 mb-5">
+      <!-- Rejilla con los 7 perritos -->
+      <div id="dogGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
         <!-- Renderizados dinámicamente -->
       </div>
 
       <!-- Resumen del Héroe Seleccionado -->
-      <div id="heroPreviewBox" class="bg-slate-950/80 rounded-2xl p-3 border border-yellow-400/40 mb-5 flex items-center justify-between">
+      <div id="heroPreviewBox" class="bg-slate-950/80 rounded-2xl p-3 border border-yellow-400/40 mb-3 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <div id="previewAvatar" class="text-4xl filter drop-shadow">🐶</div>
+          <div id="previewAvatar" class="text-4xl filter drop-shadow">🐕</div>
           <div class="text-left">
-            <h3 id="previewName" class="font-arcade text-yellow-300 text-base leading-none">Capitán Tom</h3>
-            <p id="previewRole" class="text-xs text-slate-300 mt-0.5">Equilibrado y valiente</p>
+            <h3 id="previewName" class="font-arcade text-yellow-300 text-sm sm:text-base leading-none">TOM (El Capitán)</h3>
+            <p id="previewRole" class="text-xs text-slate-300 mt-0.5 max-w-[220px] truncate">Líder Equilibrado</p>
           </div>
         </div>
         <div class="text-right text-xs font-bold text-amber-400">
-          <div>Disparo: <span id="previewShoot" class="text-white">Hueso Láser</span></div>
-          <div>Salto: <span id="previewJump" class="text-white">⭐⭐⭐</span></div>
+          <div>Disparo: <span id="previewShoot" class="text-white">Hueso Veloz</span></div>
+          <div id="previewJump" class="text-slate-300">Vel: 4.8 | Salto: ⭐⭐⭐</div>
         </div>
       </div>
 
-      <!-- Botón Comenzar Aventura -->
-      <button id="btnStartGame" class="w-full py-4 rounded-2xl font-arcade text-xl sm:text-2xl text-amber-950 btn-arcade-gold flex items-center justify-center gap-3">
+      <!-- Selector de Dificultad -->
+      <div class="mb-4 bg-slate-950/60 rounded-xl p-2.5 border border-slate-700">
+        <div class="text-xs font-arcade text-amber-300 mb-1.5 uppercase">Nivel de Dificultad:</div>
+        <div class="grid grid-cols-3 gap-1.5" id="difficultyGroup">
+          <button type="button" data-diff="easy" class="btn-diff py-1.5 px-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-600 transition">
+            🟢 Fácil
+          </button>
+          <button type="button" data-diff="normal" class="btn-diff py-1.5 px-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 border border-yellow-300 shadow transition font-extrabold">
+            🟡 Normal
+          </button>
+          <button type="button" data-diff="hard" class="btn-diff py-1.5 px-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-600 transition">
+            🔴 Difícil
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón Iniciar Campaña -->
+      <button id="btnStartGame" class="w-full py-3.5 rounded-2xl font-arcade text-lg sm:text-xl text-amber-950 btn-arcade-gold flex items-center justify-center gap-2">
         <span>🎮</span>
-        <span>¡INICIAR MISIÓN!</span>
+        <span>¡COMENZAR AVENTURA!</span>
         <span>🔥</span>
       </button>
     </div>
 
     <!-- Guía de Controles Claros para PC / Laptop y Móvil -->
-    <div class="mt-4 w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl p-3 text-xs text-slate-300 flex flex-wrap items-center justify-around gap-2 text-center">
-      <div class="flex items-center gap-1.5">
-        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">A / D</span> o <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">◀ ▶</span>
+    <div class="mt-3 w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl p-2.5 text-xs text-slate-300 flex flex-wrap items-center justify-around gap-2 text-center">
+      <div class="flex items-center gap-1">
+        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-1.5 py-0.5 rounded font-mono font-bold">A / D</span> o <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-1.5 py-0.5 rounded font-mono font-bold">◀ ▶</span>
         <span>Moverse</span>
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">ESPACIO</span> o <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">W / Z / ▲</span>
+      <div class="flex items-center gap-1">
+        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-1.5 py-0.5 rounded font-mono font-bold">ESPACIO</span> o <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-1.5 py-0.5 rounded font-mono font-bold">W / Z / ▲</span>
         <span>Saltar</span>
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">J / X / ENTER</span>
+      <div class="flex items-center gap-1">
+        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-1.5 py-0.5 rounded font-mono font-bold">J / X / ENTER</span>
         <span>Disparar</span>
       </div>
     </div>
@@ -157,11 +172,14 @@
   <main id="viewGame" class="w-full max-w-4xl flex-col items-center hidden">
     
     <!-- Barra Superior de Información y Vidas -->
-    <div class="w-full flex items-center justify-between bg-slate-900/90 border-2 border-yellow-400/70 rounded-2xl px-3.5 py-2 mb-2 shadow-lg">
+    <div class="w-full flex items-center justify-between bg-slate-900/95 border-2 border-yellow-400/70 rounded-2xl px-3 py-2 mb-2 shadow-lg">
       <div class="flex items-center gap-2">
-        <span id="hudAvatar" class="text-2xl">🐶</span>
+        <span id="hudAvatar" class="text-2xl">🐕</span>
         <div>
-          <div id="hudName" class="font-arcade text-xs text-yellow-300 leading-none">TOM</div>
+          <div class="flex items-center gap-2">
+            <span id="hudName" class="font-arcade text-xs text-yellow-300 leading-none">TOM</span>
+            <span id="hudLevelBadge" class="bg-amber-500/20 text-amber-300 border border-amber-400/50 text-[10px] px-1.5 py-0.2 rounded font-bold">NIVEL 1</span>
+          </div>
           <div class="flex items-center gap-1 mt-0.5" id="hudHearts">
             <span class="text-base text-red-500">❤️</span>
             <span class="text-base text-red-500">❤️</span>
@@ -170,20 +188,20 @@
         </div>
       </div>
 
-      <!-- Barra de Progreso hacia el Boss ROSQUILLA -->
-      <div class="flex-1 max-w-[200px] sm:max-w-xs mx-3">
+      <!-- Barra de Progreso hacia el Boss -->
+      <div class="flex-1 max-w-[180px] sm:max-w-xs mx-2 sm:mx-4">
         <div class="flex justify-between text-[10px] font-bold text-slate-300 mb-0.5">
           <span>META</span>
-          <span id="hudDistance">0m / 1000m</span>
-          <span>🐱 ROSQUILLA</span>
+          <span id="hudDistance">0m / 900m</span>
+          <span id="hudBossIcon">😼 BOSS</span>
         </div>
         <div class="w-full bg-slate-950 h-3 rounded-full border border-yellow-400/50 overflow-hidden relative">
           <div id="progressTrack" class="bg-gradient-to-r from-amber-400 to-rose-500 h-full w-[5%] transition-all duration-200"></div>
         </div>
       </div>
 
-      <!-- Puntuación & Monedas -->
-      <div class="flex items-center gap-3">
+      <!-- Puntuación & Botón de Sonido -->
+      <div class="flex items-center gap-2.5">
         <div class="text-right">
           <div class="text-[9px] uppercase font-bold text-amber-400 leading-none">PUNTOS</div>
           <div id="hudScore" class="font-arcade text-sm text-white leading-none">0</div>
@@ -198,15 +216,14 @@
     <div class="relative w-full aspect-[16/9] game-bezel rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center">
       <canvas id="gameCanvas" width="960" height="540" class="w-full h-full object-contain"></canvas>
       
-      <!-- Cartel de Alerta de ROSQUILLA -->
-      <div id="bossAlertBox" class="absolute top-6 px-6 py-2 bg-red-600/90 border-4 border-yellow-300 rounded-2xl font-arcade text-lg sm:text-2xl text-white shadow-2xl animate-bounce hidden z-30 text-center">
-        ⚠️ ¡PELIGRO! ¡EL GATO GIGANTE ROSQUILLA ATACA! 🐱⚠️
+      <!-- Cartel de Alerta de Boss -->
+      <div id="bossAlertBox" class="absolute top-6 px-5 py-2 bg-red-600/90 border-4 border-yellow-300 rounded-2xl font-arcade text-base sm:text-xl text-white shadow-2xl animate-bounce hidden z-30 text-center">
+        ⚠️ ¡PELIGRO! ¡EL JEFE FELINO ATACA! ⚠️
       </div>
     </div>
 
     <!-- Controles Táctiles para Móviles / Tablets -->
     <div id="touchPad" class="w-full flex items-center justify-between px-2 pt-2 gap-2 max-w-lg select-none">
-      <!-- Botones Direccionales Izquierda / Derecha -->
       <div class="flex items-center gap-2">
         <button id="touchLeft" class="w-14 h-14 rounded-2xl bg-slate-800 border-2 border-yellow-400/80 active:bg-yellow-500 active:text-slate-950 text-2xl font-bold flex items-center justify-center shadow-lg active:scale-95 transition">
           ◀
@@ -216,7 +233,6 @@
         </button>
       </div>
 
-      <!-- Botones de Acción (Saltar y Disparar) -->
       <div class="flex items-center gap-3">
         <button id="touchShoot" class="w-16 h-14 rounded-2xl btn-arcade-blue font-arcade text-sm text-white flex flex-col items-center justify-center active:scale-95 transition">
           <span class="text-lg">🦴</span>
@@ -230,27 +246,30 @@
     </div>
   </main>
 
-  <!-- MODAL DE VICTORIA O GAME OVER -->
+  <!-- MODAL DE VICTORIA / SIGUIENTE NIVEL / GAME OVER -->
   <div id="gameModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="w-full max-w-sm bg-gradient-to-b from-slate-900 to-indigo-950 border-4 border-yellow-400 rounded-3xl p-6 text-center shadow-2xl relative">
       <div id="modalIcon" class="text-6xl -mt-12 mb-2 animate-bounce">🏆</div>
-      <h2 id="modalTitle" class="font-arcade text-2xl sm:text-3xl text-yellow-300 leading-tight mb-2">¡VICTORIA TOTAL!</h2>
-      <p id="modalDesc" class="text-sm text-slate-200 font-bold mb-4">¡Has derrotado al temible Gato ROSQUILLA y protegido el techo!</p>
+      <h2 id="modalTitle" class="font-arcade text-2xl text-yellow-300 leading-tight mb-2">¡VICTORIA TOTAL!</h2>
+      <p id="modalDesc" class="text-sm text-slate-200 font-bold mb-4">¡Has derrotado a los felinos!</p>
 
       <div class="bg-black/50 border border-yellow-400/30 rounded-2xl p-3 mb-5">
         <div class="flex justify-between text-xs font-bold text-amber-300 mb-1">
-          <span>Puntaje Final:</span>
+          <span>Puntaje:</span>
           <span id="modalFinalScore" class="text-white font-arcade text-base">0</span>
         </div>
         <div class="flex justify-between text-xs font-bold text-amber-300">
-          <span>Héroe Perruno:</span>
+          <span>Héroe:</span>
           <span id="modalFinalHero" class="text-white">TOM (El Capitán)</span>
         </div>
       </div>
 
       <div class="flex flex-col gap-2">
-        <button id="btnModalRestart" class="w-full py-3 rounded-xl font-arcade text-lg text-amber-950 btn-arcade-gold">
-          🔄 JUGAR OTRA VEZ
+        <button id="btnModalNext" class="w-full py-3 rounded-xl font-arcade text-base text-white btn-arcade-green hidden">
+          🐾 ¡SIGUIENTE NIVEL! ⏩
+        </button>
+        <button id="btnModalRestart" class="w-full py-3 rounded-xl font-arcade text-base text-amber-950 btn-arcade-gold">
+          🔄 REINTENTAR NIVEL
         </button>
         <button id="btnModalMenu" class="w-full py-2.5 rounded-xl font-arcade text-sm text-white bg-slate-800 border border-yellow-400/50 hover:bg-slate-700">
           🐕 CAMBIAR DE PERRITO
@@ -260,7 +279,7 @@
   </div>
 
   <script>
-    /* Sistema de Audio Sintetizado con Web Audio API */
+    /* Sistema de Audio Sintetizado Web Audio API */
     const SoundFx = {
       ctx: null,
       muted: false,
@@ -314,9 +333,9 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(600, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.12);
-          gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+          osc.frequency.setValueAtTime(550, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(140, this.ctx.currentTime + 0.12);
+          gain.gain.setValueAtTime(0.22, this.ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -335,38 +354,54 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(140, this.ctx.currentTime);
-          osc.frequency.linearRampToValueAtTime(70, this.ctx.currentTime + 0.4);
-          gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
+          osc.frequency.setValueAtTime(130, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(65, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start();
-          osc.stop(this.ctx.currentTime + 0.4);
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch(e) {}
+      },
+
+      levelWin() {
+        if (this.muted || !this.ctx) return;
+        try {
+          [261.63, 329.63, 392.00, 523.25].forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.18, this.ctx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + i * 0.1 + 0.25);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(this.ctx.currentTime + i * 0.1);
+            osc.stop(this.ctx.currentTime + i * 0.1 + 0.25);
+          });
         } catch(e) {}
       },
 
       victory() {
         if (this.muted || !this.ctx) return;
         try {
-          const notes = [261.63, 329.63, 392.0, 523.25];
-          notes.forEach((freq, idx) => {
+          [261.63, 329.63, 392.0, 523.25, 659.25].forEach((freq, idx) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.12);
             gain.gain.setValueAtTime(0.2, this.ctx.currentTime + idx * 0.12);
-            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.12 + 0.3);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.12 + 0.35);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(this.ctx.currentTime + idx * 0.12);
-            osc.stop(this.ctx.currentTime + idx * 0.12 + 0.3);
+            osc.stop(this.ctx.currentTime + idx * 0.12 + 0.35);
           });
         } catch(e) {}
       }
     };
 
-    /* Perfiles de los 7 Héroes Perrunos */
+    /* Los 7 Héroes Perrunos */
     const DOG_ROSTER = [
       {
         id: 'tom_lider',
@@ -377,7 +412,7 @@
         speed: 4.8,
         jumpPower: 12.8,
         shootType: 'Hueso Veloz',
-        bulletSpeed: 9.5,
+        bulletSpeed: 10,
         damage: 1.1,
         desc: 'El perro céntrico de orejas caídas y gran valentía. ¡Lidera a toda la manada!'
       },
@@ -390,7 +425,7 @@
         speed: 4.6,
         jumpPower: 12.5,
         shootType: 'Croqueta Láser',
-        bulletSpeed: 12,
+        bulletSpeed: 12.5,
         damage: 1.2,
         desc: 'El hermano a su derecha con orejas hacia los lados. Proyectil de gran alcance.'
       },
@@ -400,12 +435,12 @@
         icon: '🐾',
         color: '#f8fafc',
         role: 'Velocista Ligero',
-        speed: 5.7,
+        speed: 5.6,
         jumpPower: 13.8,
         shootType: 'Doble Huesito',
         bulletSpeed: 10,
-        damage: 0.9,
-        desc: 'El cachorrito blanco curioso. Corre y salta como ningún otro.'
+        damage: 0.95,
+        desc: 'El cachorrito blanco curioso. Corre y salta con agilidad suprema.'
       },
       {
         id: 'chascon_peludo',
@@ -415,10 +450,10 @@
         role: 'Tanque Resistente',
         speed: 4.2,
         jumpPower: 12.0,
-        shootType: 'Super Hueso Pesado',
-        bulletSpeed: 8,
+        shootType: 'Super Hueso',
+        bulletSpeed: 8.5,
         damage: 1.6,
-        desc: 'El perrito de pelaje esponjoso a la izquierda. ¡Sus disparos hacen mucho daño!'
+        desc: 'El perrito de pelaje esponjoso a la izquierda. ¡Sus disparos hacen gran daño!'
       },
       {
         id: 'tricolor_pecho',
@@ -442,9 +477,9 @@
         speed: 4.5,
         jumpPower: 12.6,
         shootType: 'Pelota de Energía',
-        bulletSpeed: 9.0,
+        bulletSpeed: 9.5,
         damage: 1.4,
-        desc: 'La fiel compañera asomada por la escalera. Dispara ráfagas certeras.'
+        desc: 'La fiel compañera asomada por la escalera. Dispara ráfagas mágicas.'
       },
       {
         id: 'chiquitin_shih_tzu',
@@ -452,7 +487,7 @@
         icon: '🐕‍🦺',
         color: '#f472b6',
         role: 'Acrobata Peludo',
-        speed: 5.4,
+        speed: 5.3,
         jumpPower: 14.2,
         shootType: 'Remolino de Amor',
         bulletSpeed: 11.0,
@@ -461,7 +496,84 @@
       }
     ];
 
+    /* Campaña de 4 Niveles con Jefes Progresivos */
+    const LEVEL_CONFIGS = [
+      {
+        levelNum: 1,
+        title: 'NIVEL 1: EL CALLEJÓN DE LADRILLO',
+        targetDist: 900,
+        skyColors: ['#f97316', '#fb923c', '#431407', '#0f172a'],
+        boss: {
+          name: 'BIGOTES (El Callejero)',
+          icon: '😼',
+          hp: 20,
+          speed: 1.6,
+          attackRate: 95,
+          bulletIcon: '🐟',
+          bulletColor: '#38bdf8',
+          bulletSpeed: 5.8
+        }
+      },
+      {
+        levelNum: 2,
+        title: 'NIVEL 2: LOS TENDEDEROS NOCTURNOS',
+        targetDist: 950,
+        skyColors: ['#6366f1', '#4338ca', '#312e81', '#090d16'],
+        boss: {
+          name: 'DON MININO (El Gordo)',
+          icon: '🙀',
+          hp: 28,
+          speed: 1.4,
+          attackRate: 85,
+          bulletIcon: '🥫',
+          bulletColor: '#cbd5e1',
+          bulletSpeed: 6.2
+        }
+      },
+      {
+        levelNum: 3,
+        title: 'NIVEL 3: LAS CHIMENEAS SOMBRÍAS',
+        targetDist: 1000,
+        skyColors: ['#0f766e', '#115e59', '#134e4a', '#022c22'],
+        boss: {
+          name: 'SOMBRA (El Ninja Felino)',
+          icon: '🐈‍⬛',
+          hp: 36,
+          speed: 2.2,
+          attackRate: 75,
+          bulletIcon: '⚡',
+          bulletColor: '#facc15',
+          bulletSpeed: 7.2
+        }
+      },
+      {
+        levelNum: 4,
+        title: 'NIVEL 4: EL TEJADO SUPREMO (FINAL)',
+        targetDist: 1050,
+        skyColors: ['#dc2626', '#991b1b', '#450a0a', '#030712'],
+        boss: {
+          name: 'EL GRAN REY ROSQUILLA',
+          icon: '😾👑',
+          hp: 48,
+          speed: 2.5,
+          attackRate: 65,
+          bulletIcon: '🧶🔥',
+          bulletColor: '#ec4899',
+          bulletSpeed: 7.8
+        }
+      }
+    ];
+
+    /* Ajustes de Dificultad */
+    const DIFFICULTY_MODIFIERS = {
+      easy: { enemySpeedMult: 0.8, bossHpMult: 0.8, scoreMult: 1 },
+      normal: { enemySpeedMult: 1.0, bossHpMult: 1.0, scoreMult: 1.5 },
+      hard: { enemySpeedMult: 1.3, bossHpMult: 1.3, scoreMult: 2.5 }
+    };
+    let currentDifficulty = 'normal';
+
     let selectedHeroIndex = 0;
+    let currentLevelIndex = 0;
 
     const dogGridEl = document.getElementById('dogGrid');
     function renderHeroSelection() {
@@ -469,15 +581,15 @@
       DOG_ROSTER.forEach((hero, index) => {
         const isSel = index === selectedHeroIndex;
         const card = document.createElement('div');
-        card.className = `p-2.5 rounded-2xl border-2 transition cursor-pointer flex flex-col items-center justify-center ${
+        card.className = `p-2 rounded-2xl border-2 transition cursor-pointer flex flex-col items-center justify-center ${
           isSel 
             ? 'bg-amber-500/30 border-yellow-300 ring-2 ring-yellow-400 scale-[1.02]' 
             : 'bg-slate-800/80 border-slate-700 hover:border-slate-500 hover:bg-slate-800'
         }`;
         card.innerHTML = `
-          <div class="text-3xl sm:text-4xl filter drop-shadow">${hero.icon}</div>
-          <div class="font-arcade text-xs text-yellow-300 mt-1 truncate max-w-[100px]">${hero.name.split(' ')[0]}</div>
-          <div class="text-[10px] font-bold text-slate-300">${hero.role}</div>
+          <div class="text-3xl filter drop-shadow">${hero.icon}</div>
+          <div class="font-arcade text-[11px] text-yellow-300 mt-1 truncate max-w-[90px]">${hero.name.split(' ')[0]}</div>
+          <div class="text-[9px] font-bold text-slate-300 truncate max-w-[90px]">${hero.role}</div>
         `;
         card.onclick = () => {
           selectedHeroIndex = index;
@@ -497,17 +609,26 @@
       document.getElementById('previewJump').innerText = `Vel: ${h.speed} | Salto: ⭐⭐⭐`;
     }
 
+    // Configurar botones de dificultad
+    document.querySelectorAll('.btn-diff').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-diff').forEach(b => {
+          b.className = 'btn-diff py-1.5 px-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-600 transition';
+        });
+        btn.className = 'btn-diff py-1.5 px-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 border border-yellow-300 shadow transition font-extrabold';
+        currentDifficulty = btn.getAttribute('data-diff');
+      });
+    });
+
     renderHeroSelection();
     updatePreviewUI();
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const LEVEL_LENGTH = 1000; // Distancia para despertar a TOM
     let gameLoopId = null;
-    let gameState = 'MENU'; // 'MENU', 'PLAYING', 'BOSS_FIGHT', 'GAMEOVER', 'VICTORY'
+    let gameState = 'MENU'; // 'MENU', 'PLAYING', 'BOSS_FIGHT', 'GAMEOVER', 'LEVEL_CLEARED', 'VICTORY'
 
-    // Inputs
     const keys = {
       left: false,
       right: false,
@@ -518,27 +639,17 @@
     const GAME_KEYS = ['KeyA', 'KeyD', 'KeyW', 'KeyS', 'KeyJ', 'KeyZ', 'KeyX', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'Enter'];
 
     window.addEventListener('keydown', (e) => {
-      // Evitar que la barra espaciadora o las flechas desplacen la página web en laptops
       if (GAME_KEYS.includes(e.code)) {
         e.preventDefault();
       }
-
       SoundFx.init();
 
-      // Movimiento izquierda
-      if (['KeyA', 'ArrowLeft'].includes(e.code)) {
-        keys.left = true;
-      }
-      // Movimiento derecha
-      if (['KeyD', 'ArrowRight'].includes(e.code)) {
-        keys.right = true;
-      }
-      // Salto (W, Flecha Arriba, Espacio o Z)
+      if (['KeyA', 'ArrowLeft'].includes(e.code)) keys.left = true;
+      if (['KeyD', 'ArrowRight'].includes(e.code)) keys.right = true;
       if (['KeyW', 'ArrowUp', 'Space', 'KeyZ'].includes(e.code)) {
         if (!keys.jump && player && player.onGround) playerJump();
         keys.jump = true;
       }
-      // Disparo (J, X o Enter)
       if (['KeyJ', 'KeyX', 'Enter'].includes(e.code)) {
         if (!keys.shoot) playerShoot();
         keys.shoot = true;
@@ -555,7 +666,6 @@
       if (['KeyJ', 'KeyX', 'Enter'].includes(e.code)) keys.shoot = false;
     });
 
-    // Soporte para mandos táctiles
     function setupTouchBtn(btnId, keyName, triggerAction = null) {
       const btn = document.getElementById(btnId);
       if (!btn) return;
@@ -590,13 +700,19 @@
     let enemies = [];
     let obstacles = [];
     let particles = [];
-    let rosquillaBoss = null;
+    let currentBoss = null;
     let score = 0;
     let playerLives = 3;
 
-    function resetGame(hero) {
-      score = 0;
-      playerLives = 3;
+    function setupCurrentLevel(hero, keepLives = true) {
+      const lvlConfig = LEVEL_CONFIGS[currentLevelIndex];
+      const diffMod = DIFFICULTY_MODIFIERS[currentDifficulty];
+
+      if (!keepLives) {
+        playerLives = 3;
+        score = 0;
+      }
+
       cameraX = 0;
       bullets = [];
       enemies = [];
@@ -605,7 +721,10 @@
       gameState = 'PLAYING';
 
       document.getElementById('bossAlertBox').classList.add('hidden');
+      document.getElementById('hudLevelBadge').innerText = `NIVEL ${lvlConfig.levelNum}`;
+      document.getElementById('hudBossIcon').innerText = `${lvlConfig.boss.icon.split(' ')[0]} BOSS`;
 
+      // Inicializar Jugador
       player = {
         x: 100,
         y: 350,
@@ -621,46 +740,45 @@
         facingRight: true
       };
 
-      // Generar nivel con plataformas en los techos de ladrillo
+      // Plataformas
       platforms = [
-        { x: -200, y: 460, w: 1500, h: 80, type: 'ground' }, // Suelo inicial
+        { x: -200, y: 460, w: 1400, h: 80, type: 'ground' },
         { x: 300, y: 360, w: 180, h: 24, type: 'brick' },
         { x: 560, y: 290, w: 160, h: 24, type: 'brick' },
         { x: 800, y: 350, w: 200, h: 24, type: 'brick' },
-        { x: 1100, y: 280, w: 190, h: 24, type: 'brick' },
-        { x: 1380, y: 460, w: 1600, h: 80, type: 'ground' }, // Arena final del Boss
-        { x: 1500, y: 360, w: 160, h: 24, type: 'brick' },
+        { x: 1080, y: 280, w: 190, h: 24, type: 'brick' },
+        { x: 1350, y: 460, w: 1800, h: 80, type: 'ground' }, // Arena del Boss
+        { x: 1520, y: 360, w: 160, h: 24, type: 'brick' },
         { x: 1800, y: 300, w: 180, h: 24, type: 'brick' }
       ];
 
-      // Trampas de púas / latas de atún trampa
+      // Púas y Trampas
       obstacles = [
-        { x: 420, y: 436, w: 32, h: 24, type: 'spikes' },
-        { x: 700, y: 436, w: 32, h: 24, type: 'spikes' },
-        { x: 960, y: 436, w: 32, h: 24, type: 'spikes' }
+        { x: 440, y: 436, w: 32, h: 24, type: 'spikes' },
+        { x: 720, y: 436, w: 32, h: 24, type: 'spikes' },
+        { x: 980, y: 436, w: 32, h: 24, type: 'spikes' }
       ];
 
-      // Gatos esbirros patrullando
+      // Esbirros Felinos Patrullando
+      const spd = diffMod.enemySpeedMult;
       enemies = [
-        { x: 480, y: 420, w: 38, h: 38, vx: -1.2, minX: 400, maxX: 650, hp: 2, icon: '😼' },
-        { x: 860, y: 420, w: 38, h: 38, vx: -1.5, minX: 800, maxX: 1020, hp: 2, icon: '🐱' },
-        { x: 1150, y: 240, w: 38, h: 38, vx: -1.3, minX: 1110, maxX: 1260, hp: 2, icon: '🐈‍⬛' }
+        { x: 480, y: 420, w: 38, h: 38, vx: -1.2 * spd, minX: 380, maxX: 640, hp: 2, icon: '😼' },
+        { x: 860, y: 420, w: 38, h: 38, vx: -1.4 * spd, minX: 780, maxX: 1000, hp: 2, icon: '🐱' },
+        { x: 1120, y: 240, w: 38, h: 38, vx: -1.3 * spd, minX: 1090, maxX: 1250, hp: 2, icon: '🐈‍⬛' }
       ];
 
-      // Boss Gigante: Gato ROSQUILLA
-      rosquillaBoss = {
-        x: 2100,
-        y: 220,
-        w: 130,
-        h: 130,
-        hp: 35,
-        maxHp: 35,
-        vx: -1.8,
+      // Boss de este Nivel
+      currentBoss = {
+        x: lvlConfig.targetDist + 800,
+        y: 230,
+        w: 120,
+        h: 120,
+        hp: Math.round(lvlConfig.boss.hp * diffMod.bossHpMult),
+        maxHp: Math.round(lvlConfig.boss.hp * diffMod.bossHpMult),
+        vx: -lvlConfig.boss.speed * spd,
         vy: 0,
         attackTimer: 0,
-        state: 'IDLE',
-        icon: '😼👑',
-        name: 'ROSQUILLA',
+        config: lvlConfig.boss,
         isActive: false
       };
 
@@ -676,11 +794,34 @@
 
     function playerShoot() {
       if (!player) return;
+
+      // Auto-orientación inteligente: Si el jugador está quieto, enfoca hacia el enemigo o boss más cercano
+      if (!keys.left && !keys.right) {
+        let targetX = null;
+        if (currentBoss && currentBoss.isActive) {
+          targetX = currentBoss.x + currentBoss.w / 2;
+        } else if (enemies.length > 0) {
+          let closestDist = Infinity;
+          enemies.forEach(en => {
+            const dist = Math.abs((en.x + en.w / 2) - (player.x + player.w / 2));
+            if (dist < closestDist) {
+              closestDist = dist;
+              targetX = en.x + en.w / 2;
+            }
+          });
+        }
+        if (targetX !== null) {
+          player.facingRight = targetX >= (player.x + player.w / 2);
+        }
+      }
+
       SoundFx.shoot();
 
       const dir = player.facingRight ? 1 : -1;
+      const bulletStartX = player.facingRight ? (player.x + player.w + 4) : (player.x - 16);
+
       bullets.push({
-        x: player.x + (player.facingRight ? player.w : 0),
+        x: bulletStartX,
         y: player.y + player.h / 2 - 6,
         w: 16,
         h: 12,
@@ -707,7 +848,9 @@
     function updatePhysics() {
       if (gameState !== 'PLAYING' && gameState !== 'BOSS_FIGHT') return;
 
-      // Movimiento horizontal del jugador
+      const lvl = LEVEL_CONFIGS[currentLevelIndex];
+
+      // Movimiento horizontal
       if (keys.left) {
         player.vx = -player.speed;
         player.facingRight = false;
@@ -715,7 +858,7 @@
         player.vx = player.speed;
         player.facingRight = true;
       } else {
-        player.vx *= 0.7; // fricción
+        player.vx *= 0.72;
       }
 
       // Gravedad
@@ -727,14 +870,14 @@
 
       if (player.invulnerableTimer > 0) player.invulnerableTimer--;
 
-      // Colisión con plataformas
+      // Colisión de plataformas
       player.onGround = false;
       platforms.forEach(p => {
         if (
           player.x + player.w > p.x &&
           player.x < p.x + p.w &&
           player.y + player.h >= p.y &&
-          player.y + player.h <= p.y + p.h + player.vy + 2 &&
+          player.y + player.h <= p.y + p.h + player.vy + 3 &&
           player.vy >= 0
         ) {
           player.y = p.y - player.h;
@@ -743,23 +886,22 @@
         }
       });
 
-      // Caída al vacío
+      // Caída al abismo
       if (player.y > 600) {
         takeDamage(1, true);
       }
 
-      // Cámara suave siguiendo al jugador
+      // Cámara suave
       const targetCamX = player.x - 240;
       cameraX += (targetCamX - cameraX) * 0.1;
       if (cameraX < 0) cameraX = 0;
 
-      // Actualizar Proyectiles
+      // Proyectiles
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
         b.x += b.vx;
 
-        // Fuera de pantalla
-        if (Math.abs(b.x - player.x) > 800) {
+        if (Math.abs(b.x - player.x) > 900) {
           bullets.splice(i, 1);
           continue;
         }
@@ -779,18 +921,18 @@
             }
           });
 
-          // Impacto en el Boss ROSQUILLA
-          if (rosquillaBoss.isActive && checkCollision(b, rosquillaBoss)) {
-            rosquillaBoss.hp -= b.damage;
+          // Impacto en el Boss
+          if (currentBoss && currentBoss.isActive && checkCollision(b, currentBoss)) {
+            currentBoss.hp -= b.damage;
             SoundFx.hit();
             bullets.splice(i, 1);
             addDustParticles(b.x, b.y, 10);
-            if (rosquillaBoss.hp <= 0) {
-              defeatRosquilla();
+            if (currentBoss.hp <= 0) {
+              defeatCurrentBoss();
             }
           }
         } else {
-          // Proyectil de ROSQUILLA contra el jugador
+          // Proyectil del Boss hacia el jugador
           if (checkCollision(b, player)) {
             takeDamage(1);
             bullets.splice(i, 1);
@@ -809,26 +951,28 @@
         }
       });
 
-      // Obstáculos (Púas)
+      // Trampas
       obstacles.forEach(ob => {
         if (checkCollision(player, ob)) {
           takeDamage(1);
         }
       });
 
-      // Lógica de Aparición y Ataques del Gato ROSQUILLA
-      if (player.x > LEVEL_LENGTH && !rosquillaBoss.isActive) {
-        rosquillaBoss.isActive = true;
+      // Detección de Aparición del Boss
+      if (player.x > lvl.targetDist && currentBoss && !currentBoss.isActive) {
+        currentBoss.isActive = true;
         gameState = 'BOSS_FIGHT';
+        document.getElementById('bossAlertBox').innerText = `⚠️ ¡PELIGRO! ¡${currentBoss.config.name} ATACA! ⚠️`;
         document.getElementById('bossAlertBox').classList.remove('hidden');
         SoundFx.bossRoar();
       }
 
-      if (rosquillaBoss.isActive) {
-        updateRosquillaBoss();
+      // Lógica de ataque del Boss
+      if (currentBoss && currentBoss.isActive) {
+        updateActiveBoss();
       }
 
-      // Actualizar Partículas
+      // Partículas
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
@@ -840,33 +984,32 @@
       updateHud();
     }
 
-    function updateRosquillaBoss() {
-      const b = rosquillaBoss;
+    function updateActiveBoss() {
+      const b = currentBoss;
       b.attackTimer++;
 
-      // Movimiento oscilante
       b.x += b.vx;
-      if (b.x < 1700 || b.x > 2200) {
+      if (b.x < 1650 || b.x > 2200) {
         b.vx *= -1;
       }
 
-      // Ataques de ROSQUILLA cada 90 frames: Lanza Madejas de Lana Explosivas
-      if (b.attackTimer % 90 === 0) {
+      // Ataques del Boss
+      if (b.attackTimer % b.config.attackRate === 0) {
         SoundFx.bossRoar();
         const dir = player.x < b.x ? -1 : 1;
         bullets.push({
           x: b.x + (dir < 0 ? 0 : b.w),
           y: b.y + 40,
-          w: 22,
-          h: 22,
-          vx: dir * 6.5,
+          w: 24,
+          h: 24,
+          vx: dir * b.config.bulletSpeed,
           damage: 1,
           fromPlayer: false,
-          isYarnBall: true
+          icon: b.config.bulletIcon,
+          color: b.config.bulletColor
         });
       }
 
-      // Colisión cuerpo a cuerpo con ROSQUILLA
       if (checkCollision(player, b)) {
         takeDamage(1);
       }
@@ -876,8 +1019,8 @@
       if (player.invulnerableTimer > 0) return;
       SoundFx.hit();
       playerLives -= amount;
-      player.invulnerableTimer = 60; // 1 segundo de gracia
-      player.vy = -7; // Pequeño rebote de dolor
+      player.invulnerableTimer = 60;
+      player.vy = -7;
 
       if (instantKill) {
         player.x = Math.max(100, player.x - 200);
@@ -892,16 +1035,32 @@
       }
     }
 
-    function defeatRosquilla() {
-      gameState = 'VICTORY';
-      SoundFx.victory();
+    function defeatCurrentBoss() {
+      const isFinalLevel = currentLevelIndex >= LEVEL_CONFIGS.length - 1;
       score += 2000;
-      showEndModal(
-        '🏆',
-        '¡MISIÓN CUMPLIDA!',
-        `¡${player.heroData.name} venció al Gato ROSQUILLA y protegió el tejado familiar!`,
-        score
-      );
+
+      if (!isFinalLevel) {
+        gameState = 'LEVEL_CLEARED';
+        SoundFx.levelWin();
+        playerLives = Math.min(3, playerLives + 1); // +1 Vida de recompensa
+        showEndModal(
+          '⭐',
+          '¡NIVEL SUPERADO!',
+          `¡${player.heroData.name} derrotó a ${currentBoss.config.name}! Te has ganado +1 Vida extra.`,
+          score,
+          true
+        );
+      } else {
+        gameState = 'VICTORY';
+        SoundFx.victory();
+        showEndModal(
+          '🏆',
+          '¡VICTORIA SUPREMA!',
+          `¡La Patrulla Perruna derrotó al REY ROSQUILLA y conquistó todos los tejados!`,
+          score,
+          false
+        );
+      }
     }
 
     function triggerGameOver() {
@@ -909,8 +1068,9 @@
       showEndModal(
         '😿',
         '¡PATRULLA DERROTADA!',
-        'El Gato ROSQUILLA se quedó con la azotea. ¡Inténtalo de nuevo con otro perrito!',
-        score
+        `Caíste ante las garras enemigas. ¡Reintenta el nivel con ${player.heroData.name}!`,
+        score,
+        false
       );
     }
 
@@ -927,13 +1087,11 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.save();
-      // Desplazamiento de cámara
       ctx.translate(-cameraX, 0);
 
-      // Fondo Dinámico: Cielo y Ladrillos de Azotea
       drawBackground();
 
-      // Dibujar Plataformas
+      // Plataformas
       platforms.forEach(p => {
         if (p.type === 'brick') {
           ctx.fillStyle = '#b45309';
@@ -942,13 +1100,11 @@
           ctx.lineWidth = 3;
           ctx.strokeRect(p.x, p.y, p.w, p.h);
 
-          // Detalles de ladrillos como en la pared de tu foto
           ctx.fillStyle = '#92400e';
           for (let bx = p.x + 8; bx < p.x + p.w - 10; bx += 28) {
             ctx.fillRect(bx, p.y + 4, 18, 16);
           }
         } else {
-          // Suelo de hormigón
           ctx.fillStyle = '#334155';
           ctx.fillRect(p.x, p.y, p.w, p.h);
           ctx.fillStyle = '#64748b';
@@ -956,7 +1112,7 @@
         }
       });
 
-      // Dibujar Obstáculos (Púas)
+      // Obstáculos
       obstacles.forEach(ob => {
         ctx.fillStyle = '#ef4444';
         ctx.beginPath();
@@ -967,13 +1123,13 @@
         ctx.fill();
       });
 
-      // Dibujar Esbirros Felinos
+      // Esbirros
       enemies.forEach(en => {
         ctx.font = '32px sans-serif';
         ctx.fillText(en.icon, en.x, en.y + 32);
       });
 
-      // Dibujar Proyectiles
+      // Proyectiles
       bullets.forEach(b => {
         if (b.fromPlayer) {
           ctx.fillStyle = '#fef08a';
@@ -983,22 +1139,21 @@
           ctx.font = '14px sans-serif';
           ctx.fillText('🦴', b.x - 2, b.y + 11);
         } else {
-          // Madeja de lana de ROSQUILLA
-          ctx.fillStyle = '#ec4899';
+          ctx.fillStyle = b.color || '#ec4899';
           ctx.beginPath();
           ctx.arc(b.x + b.w / 2, b.y + b.h / 2, 10, 0, Math.PI * 2);
           ctx.fill();
           ctx.font = '16px sans-serif';
-          ctx.fillText('🧶', b.x - 2, b.y + 15);
+          ctx.fillText(b.icon || '🧶', b.x - 2, b.y + 15);
         }
       });
 
-      // Dibujar al Gato Gigante ROSQUILLA
-      if (rosquillaBoss.isActive) {
-        drawRosquillaBoss();
+      // Boss
+      if (currentBoss && currentBoss.isActive) {
+        drawActiveBoss();
       }
 
-      // Dibujar al Héroe Perruno Jugador
+      // Jugador
       if (player) {
         drawPlayer();
       }
@@ -1015,19 +1170,18 @@
     }
 
     function drawBackground() {
-      // Cielo al atardecer (como la foto original)
+      const lvl = LEVEL_CONFIGS[currentLevelIndex];
       const grad = ctx.createLinearGradient(cameraX, 0, cameraX, 540);
-      grad.addColorStop(0, '#f97316');
-      grad.addColorStop(0.3, '#fb923c');
-      grad.addColorStop(0.7, '#3b0764');
-      grad.addColorStop(1, '#0f172a');
+      grad.addColorStop(0, lvl.skyColors[0]);
+      grad.addColorStop(0.3, lvl.skyColors[1]);
+      grad.addColorStop(0.7, lvl.skyColors[2]);
+      grad.addColorStop(1, lvl.skyColors[3]);
       ctx.fillStyle = grad;
       ctx.fillRect(cameraX, 0, canvas.width, canvas.height);
 
-      // Paredes de ladrillo rústico al fondo
-      ctx.fillStyle = 'rgba(120, 53, 15, 0.35)';
-      for (let i = 0; i < 20; i++) {
-        ctx.fillRect(i * 140, 260, 100, 200);
+      ctx.fillStyle = 'rgba(120, 53, 15, 0.25)';
+      for (let i = 0; i < 24; i++) {
+        ctx.fillRect(i * 130, 260 + ((i % 3) * 20), 90, 220);
       }
     }
 
@@ -1038,39 +1192,37 @@
       }
 
       ctx.translate(player.x + player.w / 2, player.y + player.h / 2);
-      if (!player.facingRight) {
+
+      // Los emojis por defecto miran a la izquierda en el estándar Unicode;
+      // invertimos la escala para que al avanzar a la derecha miren hacia el frente (al enemigo)
+      if (player.facingRight) {
         ctx.scale(-1, 1);
+      } else {
+        ctx.scale(1, 1);
       }
 
-      // Icono del perrito con sombra
       ctx.font = '40px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(player.heroData.icon, 0, 0);
 
-      // Sombra debajo
       ctx.restore();
     }
 
-    function drawRosquillaBoss() {
-      const b = rosquillaBoss;
+    function drawActiveBoss() {
+      const b = currentBoss;
       ctx.save();
       ctx.translate(b.x + b.w / 2, b.y + b.h / 2);
 
-      // Resplandor amenazante
       ctx.shadowColor = '#ef4444';
       ctx.shadowBlur = 25;
 
-      ctx.font = '100px sans-serif';
+      ctx.font = '95px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('😾', 0, -10);
+      ctx.fillText(b.config.icon, 0, -5);
 
-      // Corona de Jefe
-      ctx.font = '40px sans-serif';
-      ctx.fillText('👑', 0, -68);
-
-      // Barra de vida del Boss
+      // Barra de vida
       ctx.shadowBlur = 0;
       const barW = 120;
       const barH = 12;
@@ -1083,9 +1235,9 @@
       ctx.lineWidth = 2;
       ctx.strokeRect(-barW / 2, 60, barW, barH);
 
-      ctx.font = 'bold 13px sans-serif';
+      ctx.font = 'bold 12px sans-serif';
       ctx.fillStyle = '#ffffff';
-      ctx.fillText('JEFE ROSQUILLA', 0, 85);
+      ctx.fillText(b.config.name, 0, 85);
 
       ctx.restore();
     }
@@ -1096,7 +1248,6 @@
       document.getElementById('hudName').innerText = player.heroData.name.split(' ')[0].toUpperCase();
       document.getElementById('hudScore').innerText = score;
 
-      // Vidas
       const heartsContainer = document.getElementById('hudHearts');
       heartsContainer.innerHTML = '';
       for (let i = 0; i < 3; i++) {
@@ -1105,10 +1256,10 @@
           : '<span class="text-base text-slate-600">🖤</span>';
       }
 
-      // Progreso hacia ROSQUILLA
-      const dist = Math.min(LEVEL_LENGTH, Math.floor(player.x));
-      document.getElementById('hudDistance').innerText = `${dist}m / ${LEVEL_LENGTH}m`;
-      const pct = Math.min(100, Math.max(5, (dist / LEVEL_LENGTH) * 100));
+      const lvl = LEVEL_CONFIGS[currentLevelIndex];
+      const dist = Math.min(lvl.targetDist, Math.floor(player.x));
+      document.getElementById('hudDistance').innerText = `${dist}m / ${lvl.targetDist}m`;
+      const pct = Math.min(100, Math.max(5, (dist / lvl.targetDist) * 100));
       document.getElementById('progressTrack').style.width = `${pct}%`;
     }
 
@@ -1118,40 +1269,56 @@
       gameLoopId = requestAnimationFrame(gameLoop);
     }
 
-    // Modal de Fin de Partida
     const gameModal = document.getElementById('gameModal');
-    function showEndModal(icon, title, desc, finalScore) {
+    const btnModalNext = document.getElementById('btnModalNext');
+
+    function showEndModal(icon, title, desc, finalScore, hasNextLevel = false) {
       document.getElementById('modalIcon').innerText = icon;
       document.getElementById('modalTitle').innerText = title;
       document.getElementById('modalDesc').innerText = desc;
       document.getElementById('modalFinalScore').innerText = finalScore;
       document.getElementById('modalFinalHero').innerText = player.heroData.name;
+
+      if (hasNextLevel) {
+        btnModalNext.classList.remove('hidden');
+      } else {
+        btnModalNext.classList.add('hidden');
+      }
+
       gameModal.classList.remove('hidden');
     }
 
+    btnModalNext.addEventListener('click', () => {
+      gameModal.classList.add('hidden');
+      if (currentLevelIndex < LEVEL_CONFIGS.length - 1) {
+        currentLevelIndex++;
+        setupCurrentLevel(DOG_ROSTER[selectedHeroIndex], true);
+      }
+    });
+
     document.getElementById('btnModalRestart').addEventListener('click', () => {
       gameModal.classList.add('hidden');
-      resetGame(DOG_ROSTER[selectedHeroIndex]);
+      setupCurrentLevel(DOG_ROSTER[selectedHeroIndex], false);
     });
 
     document.getElementById('btnModalMenu').addEventListener('click', () => {
       gameModal.classList.add('hidden');
       document.getElementById('viewGame').classList.add('hidden');
       document.getElementById('viewSelection').classList.remove('hidden');
+      currentLevelIndex = 0;
     });
 
-    // Iniciar Juego desde Selección
     document.getElementById('btnStartGame').addEventListener('click', () => {
       SoundFx.init();
       document.getElementById('viewSelection').classList.add('hidden');
       document.getElementById('viewGame').classList.remove('hidden');
-      resetGame(DOG_ROSTER[selectedHeroIndex]);
+      currentLevelIndex = 0;
+      setupCurrentLevel(DOG_ROSTER[selectedHeroIndex], false);
       if (!gameLoopId) {
         gameLoopId = requestAnimationFrame(gameLoop);
       }
     });
 
-    // Control de Silencio
     document.getElementById('btnSoundToggle').addEventListener('click', () => {
       SoundFx.init();
       SoundFx.muted = !SoundFx.muted;
