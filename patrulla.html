@@ -136,12 +136,20 @@
       </button>
     </div>
 
-    <div class="mt-4 text-xs text-slate-400 flex items-center gap-3">
-      <span>Controles: [A][D] o Flechas: Moverse</span>
-      <span>•</span>
-      <span>[W] o Espacio: Saltar</span>
-      <span>•</span>
-      <span>[J] o Enter: Disparar</span>
+    <!-- Guía de Controles Claros para PC / Laptop y Móvil -->
+    <div class="mt-4 w-full bg-slate-900/60 border border-slate-700/60 rounded-2xl p-3 text-xs text-slate-300 flex flex-wrap items-center justify-around gap-2 text-center">
+      <div class="flex items-center gap-1.5">
+        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">A / D</span> o <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">◀ ▶</span>
+        <span>Moverse</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">ESPACIO</span> o <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">W / Z / ▲</span>
+        <span>Saltar</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="bg-slate-800 border border-yellow-400/40 text-yellow-300 px-2 py-0.5 rounded font-mono font-bold">J / X / ENTER</span>
+        <span>Disparar</span>
+      </div>
     </div>
   </main>
 
@@ -507,25 +515,44 @@
       shoot: false
     };
 
+    const GAME_KEYS = ['KeyA', 'KeyD', 'KeyW', 'KeyS', 'KeyJ', 'KeyZ', 'KeyX', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'Enter'];
+
     window.addEventListener('keydown', (e) => {
+      // Evitar que la barra espaciadora o las flechas desplacen la página web en laptops
+      if (GAME_KEYS.includes(e.code)) {
+        e.preventDefault();
+      }
+
       SoundFx.init();
-      if (['KeyA', 'ArrowLeft'].includes(e.code)) keys.left = true;
-      if (['KeyD', 'ArrowRight'].includes(e.code)) keys.right = true;
-      if (['KeyW', 'ArrowUp', 'Space'].includes(e.code)) {
+
+      // Movimiento izquierda
+      if (['KeyA', 'ArrowLeft'].includes(e.code)) {
+        keys.left = true;
+      }
+      // Movimiento derecha
+      if (['KeyD', 'ArrowRight'].includes(e.code)) {
+        keys.right = true;
+      }
+      // Salto (W, Flecha Arriba, Espacio o Z)
+      if (['KeyW', 'ArrowUp', 'Space', 'KeyZ'].includes(e.code)) {
         if (!keys.jump && player && player.onGround) playerJump();
         keys.jump = true;
       }
-      if (['KeyJ', 'Enter'].includes(e.code)) {
+      // Disparo (J, X o Enter)
+      if (['KeyJ', 'KeyX', 'Enter'].includes(e.code)) {
         if (!keys.shoot) playerShoot();
         keys.shoot = true;
       }
     });
 
     window.addEventListener('keyup', (e) => {
+      if (GAME_KEYS.includes(e.code)) {
+        e.preventDefault();
+      }
       if (['KeyA', 'ArrowLeft'].includes(e.code)) keys.left = false;
       if (['KeyD', 'ArrowRight'].includes(e.code)) keys.right = false;
-      if (['KeyW', 'ArrowUp', 'Space'].includes(e.code)) keys.jump = false;
-      if (['KeyJ', 'Enter'].includes(e.code)) keys.shoot = false;
+      if (['KeyW', 'ArrowUp', 'Space', 'KeyZ'].includes(e.code)) keys.jump = false;
+      if (['KeyJ', 'KeyX', 'Enter'].includes(e.code)) keys.shoot = false;
     });
 
     // Soporte para mandos táctiles
