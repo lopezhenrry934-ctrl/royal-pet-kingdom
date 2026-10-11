@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Royal Pet Kingdom - Salva al Rey & Decora el Palacio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lilita+One&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: radial-gradient(circle at 50% 25%, #4a0e2e, #240718, #12020d);
+      min-height: 100vh;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .font-royal {
+      font-family: 'Lilita One', cursive;
+      letter-spacing: 0.05em;
+    }
+
+    .font-sub {
+      font-family: 'Fredoka One', cursive;
+    }
+
+    /* Efectos 3D de botones estilo Royal Match */
+    .btn-royal-gold {
+      background: linear-gradient(180deg, #fde047 0%, #eab308 50%, #ca8a04 100%);
+      box-shadow: 0 6px 0 #854d0e, 0 10px 18px rgba(0,0,0,0.4);
+      transition: all 0.1s ease-in-out;
+    }
+    .btn-royal-gold:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #854d0e, 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .btn-royal-green {
+      background: linear-gradient(180deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+      box-shadow: 0 6px 0 #14532d, 0 10px 18px rgba(0,0,0,0.4);
+      transition: all 0.1s ease-in-out;
+    }
+    .btn-royal-green:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #14532d, 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .btn-royal-red {
+      background: linear-gradient(180deg, #fb7185 0%, #e11d48 50%, #9f1239 100%);
+      box-shadow: 0 6px 0 #4c0519, 0 10px 18px rgba(0,0,0,0.4);
+      transition: all 0.1s ease-in-out;
+    }
+    .btn-royal-red:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #4c0519, 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Marcos dorados y terciopelo real */
+    .royal-card {
+      background: linear-gradient(135deg, rgba(88, 28, 135, 0.85), rgba(59, 7, 100, 0.95));
+      border: 4px solid #facc15;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6), inset 0 0 15px rgba(250, 204, 21, 0.35);
+    }
+
+    .board-frame {
+      background: radial-gradient(circle, #3b0764 0%, #1e0038 100%);
+      border: 6px solid #eab308;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 18px rgba(234, 179, 8, 0.4);
+    }
+
+    /* Animaciones de piezas */
+    .tile {
+      will-change: transform, opacity;
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .tile.selected {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 10px #fde047);
+      animation: pulse-royal 0.8s infinite alternate ease-in-out;
+      z-index: 35;
+    }
+    @keyframes pulse-royal {
+      0% { transform: scale(1.1); }
+      100% { transform: scale(1.22); }
+    }
+
+    .tile.pop-out {
+      animation: popOut 0.22s forwards ease-in-out;
+    }
+    @keyframes popOut {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3) rotate(8deg); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* Destellos de boosters */
+    .booster-shine {
+      animation: boosterGlow 1.8s infinite alternate ease-in-out;
+    }
+    @keyframes boosterGlow {
+      0% { filter: drop-shadow(0 0 4px #fbbf24); }
+      100% { filter: drop-shadow(0 0 14px #f43f5e) drop-shadow(0 0 6px #60a5fa); }
+    }
+
+    /* Flotador de textos y combo */
+    .float-feedback {
+      position: absolute;
+      pointer-events: none;
+      animation: floatFeedback 0.9s forwards ease-out;
+      z-index: 60;
+      font-family: 'Lilita One', cursive;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.7);
+    }
+    @keyframes floatFeedback {
+      0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+      20% { transform: translate(-50%, -80%) scale(1.2); opacity: 1; }
+      80% { transform: translate(-50%, -120%) scale(1.0); opacity: 0.9; }
+      100% { transform: translate(-50%, -160%) scale(0.85); opacity: 0; }
+    }
+
+    /* Sacudida de pantalla */
+    .shake-fx {
+      animation: shakeAnim 0.35s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes shakeAnim {
+      10%, 90% { transform: translate3d(-2px, 0, 0); }
+      20%, 80% { transform: translate3d(3px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+      40%, 60% { transform: translate3d(5px, 0, 0); }
+    }
+
+    /* Efecto de nivel de Pesadilla / Peligro */
+    .danger-pulse {
+      animation: dangerBg 1.5s infinite alternate ease-in-out;
+    }
+    @keyframes dangerBg {
+      0% { box-shadow: inset 0 0 20px rgba(239, 68, 68, 0.4); }
+      100% { box-shadow: inset 0 0 45px rgba(239, 68, 68, 0.85); }
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-start min-h-screen">
+
+  <div class="w-full max-w-md px-3 pt-3 flex items-center justify-between z-30">
+    <!-- Nivel y Corona -->
+    <div class="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-yellow-600 px-3 py-1.5 rounded-2xl border-2 border-yellow-200 shadow-lg">
+      <span class="text-xl">👑</span>
+      <div>
+        <div class="text-[9px] uppercase tracking-widest font-extrabold text-amber-950 leading-none">Reino</div>
+        <div id="statLevelBadge" class="font-royal text-sm text-white leading-none">NIVEL 1</div>
+      </div>
+    </div>
+
+    <!-- Divisas: Estrellas y Monedas de Rey -->
+    <div class="flex items-center space-x-2">
+      <!-- Estrellas -->
+      <div class="flex items-center bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-yellow-400/70 shadow-md">
+        <span class="text-lg mr-1 animate-spin-slow">⭐</span>
+        <span id="starCounter" class="font-royal text-amber-300 text-base">3</span>
+      </div>
+
+      <!-- Monedas -->
+      <div class="flex items-center bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-yellow-400/70 shadow-md">
+        <span class="text-lg mr-1">🪙</span>
+        <span id="coinCounter" class="font-royal text-yellow-300 text-base">500</span>
+      </div>
+
+      <!-- Sonido -->
+      <button id="btnSoundToggle" class="p-2 bg-purple-900/80 hover:bg-purple-800 rounded-full border border-yellow-300/40 text-yellow-300 active:scale-95 shadow">
+        <span id="soundIcon">🔊</span>
+      </button>
+    </div>
+  </div>
+
+  <section id="palaceView" class="w-full max-w-md flex-1 flex flex-col justify-between px-3 py-2 transition-all duration-300">
+    <!-- Cabecera de la Habitación Real -->
+    <div class="mt-2 text-center relative">
+      <div class="inline-block bg-purple-950/80 px-4 py-1 rounded-full border border-yellow-400 text-xs font-bold text-amber-300 tracking-wider mb-1">
+        🏰 SALÓN DEL TRONO REAL
+      </div>
+      <h2 id="roomTitle" class="font-royal text-2xl text-yellow-300 drop-shadow">Castillo de Sir Patitas</h2>
+    </div>
+
+    <!-- Escena Interactiva del Palacio / Rey Mascota -->
+    <div class="relative w-full aspect-[4/3] rounded-3xl overflow-hidden border-4 border-yellow-400 shadow-2xl bg-gradient-to-b from-indigo-950 via-purple-900 to-amber-950 flex flex-col justify-end p-4">
+      
+      <!-- Fondo decorado dinámico -->
+      <div class="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-overlay" style="background-image: radial-gradient(#eab308 1px, transparent 1px); background-size: 16px 16px;"></div>
+
+      <!-- Cortinas Reales Rojas -->
+      <div class="absolute top-0 left-0 w-16 h-28 bg-red-800 rounded-br-full shadow-lg border-r-2 border-yellow-400"></div>
+      <div class="absolute top-0 right-0 w-16 h-28 bg-red-800 rounded-bl-full shadow-lg border-l-2 border-yellow-400"></div>
+      <div class="absolute top-0 left-12 right-12 h-6 bg-red-800 rounded-b-xl border-b-2 border-yellow-400"></div>
+
+      <!-- Ítems a Restaurar / Desbloquear en la Habitación -->
+      <!-- Item 1: Trono Dorado -->
+      <div id="roomItemThrone" class="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center transition-all duration-500">
+        <div id="throneGraphic" class="text-7xl drop-shadow-2xl transform transition hover:scale-105">🛋️</div>
+        <div id="throneStatus" class="mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase bg-red-950/80 text-rose-300 border border-red-500">Desgastado</div>
+      </div>
+
+      <!-- Item 2: Alfombra Real de Paseo -->
+      <div id="roomItemCarpet" class="absolute bottom-2 left-1/2 -translate-x-1/2 w-48 h-10 rounded-full flex items-center justify-center transition-all duration-500">
+        <div id="carpetGraphic" class="w-full h-full bg-red-950/70 border-2 border-dashed border-red-400 rounded-full flex items-center justify-center text-xs text-red-300 font-bold">
+          Alfombra rota
+        </div>
+      </div>
+
+      <!-- Item 3: Cuadro / Estandarte de la Corona -->
+      <div id="roomItemBanner" class="absolute top-10 left-1/2 -translate-x-1/2 flex flex-col items-center">
+        <div id="bannerGraphic" class="text-4xl filter grayscale contrast-50 opacity-60">🖼️</div>
+      </div>
+
+      <!-- El Rey Mascota (Sir Patitas) -->
+      <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center z-10 pointer-events-none">
+        <div class="relative">
+          <span class="absolute -top-5 left-1/2 -translate-x-1/2 text-3xl animate-bounce">👑</span>
+          <div id="kingAvatar" class="text-6xl drop-shadow-lg transform transition">🐶</div>
+        </div>
+        <div class="bg-black/60 backdrop-blur-sm px-3 py-0.5 rounded-full border border-yellow-400/80 text-[11px] font-extrabold text-yellow-300 mt-1">
+          Rey Patitas I
+        </div>
+      </div>
+
+      <!-- Diálogo / Reacción del Rey -->
+      <div class="absolute top-14 left-4 right-4 bg-white/95 rounded-2xl p-2.5 border-2 border-yellow-400 shadow-xl flex items-center space-x-2 text-slate-800 z-20">
+        <span class="text-2xl">💬</span>
+        <p id="kingSpeech" class="text-xs font-bold leading-tight">
+          "¡Gana estrellas en el tablero para restaurar mi hermoso Salón del Trono!"
+        </p>
+      </div>
+    </div>
+
+    <!-- Panel de Renovación con Estrellas (Estilo Royal Match) -->
+    <div class="royal-card rounded-2xl p-3 my-2 text-center">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-extrabold text-amber-300 uppercase tracking-wider">Misión de Restauración</span>
+        <span id="renovationProgressText" class="text-xs font-bold text-yellow-400">0 / 3 Objetos</span>
+      </div>
+      
+      <!-- Botón de Reparación con Estrellas -->
+      <button id="btnRenovate" class="w-full py-2.5 px-4 rounded-xl font-royal text-lg text-amber-950 btn-royal-gold flex items-center justify-center space-x-2">
+        <span id="renovateBtnLabel">Mejorar Trono Real</span>
+        <span class="flex items-center bg-black/20 px-2 py-0.5 rounded-lg text-white font-sub text-sm">
+          1 ⭐
+        </span>
+      </button>
+    </div>
+
+    <!-- Botón Principal: Jugar Siguiente Nivel / Modo Rey en Apuros -->
+    <div class="flex flex-col gap-2 pb-2">
+      <button id="btnPlayNextLevel" class="w-full py-3.5 rounded-2xl font-royal text-2xl text-emerald-950 btn-royal-green tracking-wide flex items-center justify-center space-x-3">
+        <span class="text-2xl">⚔️</span>
+        <span id="playButtonText">¡JUGAR NIVEL 1!</span>
+        <span class="text-2xl">▶</span>
+      </button>
+
+      <button id="btnTriggerNightmare" class="w-full py-2 rounded-xl font-royal text-sm text-white btn-royal-red flex items-center justify-center space-x-2">
+        <span>🔥</span>
+        <span>MODO RESCATE: ¡EL REY EN APUROS!</span>
+        <span>🐕‍🦺</span>
+      </button>
+    </div>
+  </section>
+
+  <section id="match3View" class="w-full max-w-md flex-1 flex flex-col justify-between px-3 py-1 hidden relative">
+    
+    <!-- Barra Superior de Objetivos y Movimientos Estilo Royal Kingdom -->
+    <div class="flex items-center justify-between bg-purple-950/90 border-2 border-yellow-400 rounded-2xl p-2.5 shadow-xl mt-1">
+      
+      <!-- Objetivos a cumplir -->
+      <div class="flex items-center space-x-3">
+        <div class="text-[10px] font-extrabold uppercase text-amber-400 leading-none">Meta:</div>
+        <div id="objectivesContainer" class="flex items-center space-x-2">
+          <!-- Inyectado dinámicamente: ej. Cajas 📦 x4, Gatitos 🐱 x10 -->
+        </div>
+      </div>
+
+      <!-- Contador Grande de Movimientos Restantes -->
+      <div class="flex flex-col items-center bg-gradient-to-b from-amber-400 to-yellow-600 px-3.5 py-1 rounded-xl border border-yellow-100 shadow-md">
+        <span class="text-[9px] font-extrabold uppercase text-amber-950 tracking-wider leading-none">Turnos</span>
+        <span id="movesRemainingText" class="font-royal text-2xl text-purple-950 leading-none">20</span>
+      </div>
+    </div>
+
+    <!-- Alerta en Modo Rey en Apuros (Si está activo) -->
+    <div id="nightmareBanner" class="hidden my-1 bg-red-600/90 border-2 border-red-300 rounded-xl px-3 py-1 flex items-center justify-between text-xs font-bold text-white shadow-lg animate-pulse">
+      <span class="flex items-center gap-1.5">
+        <span class="text-xl">🌊</span>
+        <span>¡Rescata al Rey antes de agotar tus turnos!</span>
+      </span>
+      <span class="text-lg">👑🐶</span>
+    </div>
+
+    <!-- Contenedor del Tablero con Lienzo de Efectos -->
+    <div class="relative w-full flex justify-center items-center my-auto">
+      <div id="boardWrapper" class="board-frame w-[94vw] max-w-[390px] aspect-square rounded-3xl p-2 relative">
+        <canvas id="fxCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-50"></canvas>
+        
+        <!-- Rejilla 8x8 de Fichas -->
+        <div id="boardGrid" class="w-full h-full grid grid-cols-8 grid-rows-8 gap-1 relative z-20">
+          <!-- Celdas renderizadas dinámicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra Inferior de Boosters Portátiles (Estilo Royal Match) -->
+    <div class="flex items-center justify-around bg-purple-950/80 border border-yellow-400/50 rounded-2xl p-2 mb-2">
+      
+      <!-- Booster 1: Martillo Real -->
+      <button id="btnBoosterHammer" class="flex flex-col items-center group active:scale-90 transition">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-b from-amber-300 to-yellow-600 border-2 border-yellow-100 flex items-center justify-center text-xl shadow-md">
+          🔨
+        </div>
+        <span class="text-[10px] font-extrabold text-amber-300 mt-0.5">Martillo (x<span id="countHammer">1</span>)</span>
+      </button>
+
+      <!-- Booster 2: Flecha Cohete -->
+      <button id="btnBoosterRocket" class="flex flex-col items-center group active:scale-90 transition">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-b from-sky-300 to-blue-600 border-2 border-blue-100 flex items-center justify-center text-xl shadow-md">
+          🚀
+        </div>
+        <span class="text-[10px] font-extrabold text-sky-300 mt-0.5">Cohete (x<span id="countRocket">1</span>)</span>
+      </button>
+
+      <!-- Booster 3: Barril de Croquetas Bomba -->
+      <button id="btnBoosterBomb" class="flex flex-col items-center group active:scale-90 transition">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-b from-rose-400 to-red-600 border-2 border-red-100 flex items-center justify-center text-xl shadow-md">
+          💣
+        </div>
+        <span class="text-[10px] font-extrabold text-rose-300 mt-0.5">Bomba (x<span id="countBomb">1</span>)</span>
+      </button>
+
+      <!-- Salir al Palacio -->
+      <button id="btnQuitLevel" class="flex flex-col items-center group active:scale-90 transition">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-b from-slate-400 to-slate-700 border-2 border-slate-300 flex items-center justify-center text-xl shadow-md">
+          🚪
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-300 mt-0.5">Rendirse</span>
+      </button>
+    </div>
+  </section>
+
+  <div id="modalOverlay" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+    <div id="modalCard" class="royal-card w-full max-w-xs rounded-3xl p-6 text-center transform scale-90 transition-transform duration-300 relative">
+      <div id="modalCrownHeader" class="text-5xl -mt-12 mb-1 animate-bounce">👑</div>
+      <h3 id="modalTitle" class="font-royal text-3xl text-yellow-300 leading-tight mb-2">¡VICTORIA REAL!</h3>
+      <p id="modalDescription" class="text-xs font-bold text-amber-100 mb-4">¡Has rescatado a los cachorros y recolectado tributos para el reino!</p>
+      
+      <!-- Recompensas ganadas -->
+      <div id="modalRewardsBox" class="bg-purple-950/90 rounded-2xl p-3 border border-yellow-400/50 mb-5 flex justify-center items-center space-x-6">
+        <div class="flex items-center space-x-1.5">
+          <span class="text-2xl">⭐</span>
+          <span id="modalStarsEarned" class="font-royal text-xl text-yellow-300">+1</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <span class="text-2xl">🪙</span>
+          <span id="modalCoinsEarned" class="font-royal text-xl text-yellow-300">+100</span>
+        </div>
+      </div>
+
+      <button id="modalPrimaryBtn" class="w-full py-3 rounded-2xl font-royal text-xl text-amber-950 btn-royal-gold">
+        ¡CONTINUAR!
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const RoyalAudio = {
+      ctx: null,
+      muted: false,
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+
+      playTone(freq, type = 'sine', duration = 0.12, gainLevel = 0.25) {
+        if (this.muted || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(gainLevel, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {}
+      },
+
+      playPop(index = 0) {
+        const freqs = [350, 420, 500, 590, 700, 840];
+        const f = freqs[Math.min(index, freqs.length - 1)];
+        this.playTone(f, 'sine', 0.14, 0.3);
+      },
+
+      playSwap() {
+        this.playTone(280, 'triangle', 0.08, 0.2);
+      },
+
+      playExplosion() {
+        if (this.muted || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch (e) {}
+      },
+
+      playRocket() {
+        if (this.muted || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(900, this.ctx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.25);
+        } catch (e) {}
+      },
+
+      playVictoryFanfare() {
+        if (this.muted || !this.ctx) return;
+        const notes = [261.6, 329.6, 392.0, 523.25, 659.25, 783.99];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => this.playTone(freq, 'triangle', 0.25, 0.3), idx * 110);
+        });
+      },
+
+      playRenovate() {
+        if (this.muted || !this.ctx) return;
+        const notes = [440, 554, 659, 880];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => this.playTone(freq, 'sine', 0.2, 0.25), idx * 80);
+        });
+      }
+    };
+
+    const PET_PIECES = [
+      { id: 0, name: 'Perro Real', icon: '🐶', bg: 'bg-amber-100', border: 'border-amber-400' },
+      { id: 1, name: 'Gato Príncipe', icon: '🐱', bg: 'bg-pink-100', border: 'border-pink-400' },
+      { id: 2, name: 'Conejo Duque', icon: '🐰', bg: 'bg-purple-100', border: 'border-purple-400' },
+      { id: 3, name: 'Hámster Barón', icon: '🐹', bg: 'bg-orange-100', border: 'border-orange-400' },
+      { id: 4, name: 'Loro Real', icon: '🦜', bg: 'bg-emerald-100', border: 'border-emerald-400' }
+    ];
+
+    const BOOSTERS = {
+      NONE: 0,
+      ROCKET_H: 1,      // Limpia fila horizontal
+      ROCKET_V: 2,      // Limpia columna vertical
+      BOMB: 3,          // Explota área 3x3 (Barril de Croquetas)
+      LIGHT_BALL: 4     // Ovillo de Lana Arcoíris: elimina todas las de un color
+    };
+
+    const OBSTACLE_TYPES = {
+      NONE: 0,
+      WOOD_BOX: 1       // Caja de madera Real (rompible al hacer match adyacente)
+    };
+
+    // Niveles preconfigurados estilo Royal Kingdom
+    const GAME_LEVELS = [
+      {
+        level: 1,
+        moves: 18,
+        isNightmare: false,
+        objectives: [
+          { type: 'pet', petId: 0, target: 12, current: 0, icon: '🐶' }
+        ],
+        obstacleChance: 0
+      },
+      {
+        level: 2,
+        moves: 20,
+        isNightmare: false,
+        objectives: [
+          { type: 'box', target: 8, current: 0, icon: '📦' },
+          { type: 'pet', petId: 1, target: 10, current: 0, icon: '🐱' }
+        ],
+        obstacleChance: 0.12
+      },
+      {
+        level: 3,
+        moves: 16,
+        isNightmare: true, // Nivel "Pesadilla del Rey": Salvar al rey antes del fuego/inundación
+        objectives: [
+          { type: 'box', target: 14, current: 0, icon: '📦' }
+        ],
+        obstacleChance: 0.22
+      },
+      {
+        level: 4,
+        moves: 22,
+        isNightmare: false,
+        objectives: [
+          { type: 'box', target: 12, current: 0, icon: '📦' },
+          { type: 'pet', petId: 2, target: 15, current: 0, icon: '🐰' }
+        ],
+        obstacleChance: 0.18
+      }
+    ];
+
+    // Datos del Meta-juego de Decoración del Palacio
+    const PALACE_RENOVATIONS = [
+      {
+        id: 'throne',
+        name: 'Trono Dorado de Gatito',
+        cost: 1,
+        done: false,
+        elementId: 'throneGraphic',
+        statusId: 'throneStatus',
+        iconRepaired: '👑🛋️',
+        desc: '¡El trono ahora brilla con oro y cojines de seda real!'
+      },
+      {
+        id: 'carpet',
+        name: 'Alfombra Roja Imperial',
+        cost: 1,
+        done: false,
+        elementId: 'carpetGraphic',
+        iconRepaired: '🧵✨ Alfombra Imperial',
+        desc: '¡Una alfombra afelpada para los paseos de Su Majestad!'
+      },
+      {
+        id: 'banner',
+        name: 'Estandarte de Su Majestad',
+        cost: 1,
+        done: false,
+        elementId: 'bannerGraphic',
+        iconRepaired: '🛡️👑',
+        desc: '¡El blasón oficial del reino de las mascotas!'
+      }
+    ];
+
+    // Variables de Estado de la Partida
+    let playerStars = 3;
+    let playerCoins = 300;
+    let currentLevelNumber = 1;
+    let inNightmareMode = false;
+
+    // Estado del Tablero Match-3
+    const ROWS = 8;
+    const COLS = 8;
+    let board = [];
+    let movesLeft = 20;
+    let levelObjectives = [];
+    let isBoardLocked = false;
+    let selectedTile = null;
+
+    // Herramientas portátiles (Power-ups)
+    let inventory = {
+      hammer: 2,
+      rocket: 1,
+      bomb: 1
+    };
+    let activeTool = null; // 'hammer', 'rocket', 'bomb'
+
+    const fxCanvas = document.getElementById('fxCanvas');
+    const fxCtx = fxCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeFxCanvas() {
+      const wrap = document.getElementById('boardWrapper');
+      if (wrap) {
+        fxCanvas.width = wrap.clientWidth;
+        fxCanvas.height = wrap.clientHeight;
+      }
+    }
+    window.addEventListener('resize', resizeFxCanvas);
+
+    function triggerConfetti(x, y, count = 16, color = '#facc15') {
+      const colors = ['#facc15', '#f43f5e', '#38bdf8', '#a855f7', '#4ade80'];
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 6 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.02 + 0.02
+        });
+      }
+    }
+
+    function renderParticles() {
+      fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.15; // gravedad
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        } else {
+          fxCtx.save();
+          fxCtx.globalAlpha = p.alpha;
+          fxCtx.fillStyle = p.color;
+          fxCtx.beginPath();
+          fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          fxCtx.fill();
+          fxCtx.restore();
+        }
+      }
+      requestAnimationFrame(renderParticles);
+    }
+    requestAnimationFrame(renderParticles);
+
+    function updateCurrencyUI() {
+      document.getElementById('starCounter').innerText = playerStars;
+      document.getElementById('coinCounter').innerText = playerCoins;
+      document.getElementById('statLevelBadge').innerText = `NIVEL ${currentLevelNumber}`;
+      document.getElementById('playButtonText').innerText = `¡JUGAR NIVEL ${currentLevelNumber}!`;
+      document.getElementById('countHammer').innerText = inventory.hammer;
+      document.getElementById('countRocket').innerText = inventory.rocket;
+      document.getElementById('countBomb').innerText = inventory.bomb;
+
+      // Actualizar estado del botón de renovación
+      const nextRenovation = PALACE_RENOVATIONS.find(r => !r.done);
+      const renovateBtn = document.getElementById('btnRenovate');
+      const progressText = document.getElementById('renovationProgressText');
+      const doneCount = PALACE_RENOVATIONS.filter(r => r.done).length;
+
+      progressText.innerText = `${doneCount} / ${PALACE_RENOVATIONS.length} Objetos`;
+
+      if (nextRenovation) {
+        document.getElementById('renovateBtnLabel').innerText = `Reparar: ${nextRenovation.name}`;
+        renovateBtn.disabled = playerStars < nextRenovation.cost;
+        renovateBtn.classList.remove('opacity-50');
+      } else {
+        document.getElementById('renovateBtnLabel').innerText = '¡Palacio Totalmente Restaurado!';
+        renovateBtn.disabled = true;
+        renovateBtn.classList.add('opacity-50');
+      }
+    }
+
+    document.getElementById('btnRenovate').addEventListener('click', () => {
+      RoyalAudio.init();
+      const target = PALACE_RENOVATIONS.find(r => !r.done);
+      if (!target || playerStars < target.cost) return;
+
+      playerStars -= target.cost;
+      target.done = true;
+      RoyalAudio.playRenovate();
+
+      // Efecto visual sobre el elemento del castillo
+      const el = document.getElementById(target.elementId);
+      if (el) {
+        el.innerHTML = target.iconRepaired;
+        el.classList.add('scale-125', 'transition-transform');
+        setTimeout(() => el.classList.remove('scale-125'), 400);
+
+        if (target.statusId) {
+          const st = document.getElementById(target.statusId);
+          st.innerText = '¡Restaurado!';
+          st.className = 'mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-400';
+        }
+      }
+
+      document.getElementById('kingSpeech').innerText = target.desc;
+      const king = document.getElementById('kingAvatar');
+      king.classList.add('rotate-12');
+      setTimeout(() => king.classList.remove('rotate-12'), 300);
+
+      updateCurrencyUI();
+    });
+
+    function showMatch3View(nightmare = false) {
+      inNightmareMode = nightmare;
+      document.getElementById('palaceView').classList.add('hidden');
+      document.getElementById('match3View').classList.remove('hidden');
+
+      const banner = document.getElementById('nightmareBanner');
+      const wrapper = document.getElementById('boardWrapper');
+
+      if (nightmare) {
+        banner.classList.remove('hidden');
+        wrapper.classList.add('danger-pulse');
+      } else {
+        banner.classList.add('hidden');
+        wrapper.classList.remove('danger-pulse');
+      }
+
+      startLevel(currentLevelNumber, nightmare);
+      setTimeout(resizeFxCanvas, 100);
+    }
+
+    function showPalaceView() {
+      document.getElementById('match3View').classList.add('hidden');
+      document.getElementById('palaceView').classList.remove('hidden');
+      updateCurrencyUI();
+    }
+
+    document.getElementById('btnPlayNextLevel').addEventListener('click', () => {
+      RoyalAudio.init();
+      const cfg = GAME_LEVELS[(currentLevelNumber - 1) % GAME_LEVELS.length];
+      showMatch3View(cfg.isNightmare);
+    });
+
+    document.getElementById('btnTriggerNightmare').addEventListener('click', () => {
+      RoyalAudio.init();
+      showMatch3View(true);
+    });
+
+    document.getElementById('btnQuitLevel').addEventListener('click', () => {
+      RoyalAudio.init();
+      showPalaceView();
+    });
+
+    function createTileData(r, c, petType = null, booster = BOOSTERS.NONE, obstacle = OBSTACLE_TYPES.NONE) {
+      if (petType === null && obstacle === OBSTACLE_TYPES.NONE) {
+        petType = Math.floor(Math.random() * PET_PIECES.length);
+      }
+      return {
+        r,
+        c,
+        petType,
+        booster,
+        obstacle,
+        id: Math.random().toString(36).substr(2, 9)
+      };
+    }
+
+    function startLevel(lvlNum, forceNightmare = false) {
+      const cfg = GAME_LEVELS[(lvlNum - 1) % GAME_LEVELS.length];
+      movesLeft = forceNightmare ? 14 : cfg.moves;
+
+      // Clonar objetivos
+      levelObjectives = cfg.objectives.map(o => ({ ...o, current: 0 }));
+      if (forceNightmare) {
+        levelObjectives = [{ type: 'box', target: 12, current: 0, icon: '📦' }];
+      }
+
+      selectedTile = null;
+      isBoardLocked = false;
+      activeTool = null;
+
+      // Crear tablero inicial sin combinaciones previas
+      let valid = false;
+      while (!valid) {
+        board = [];
+        for (let r = 0; r < ROWS; r++) {
+          board[r] = [];
+          for (let c = 0; c < COLS; c++) {
+            // Posible obstáculo de caja de madera
+            const hasObstacle = Math.random() < (forceNightmare ? 0.25 : cfg.obstacleChance);
+            if (hasObstacle) {
+              board[r][c] = createTileData(r, c, null, BOOSTERS.NONE, OBSTACLE_TYPES.WOOD_BOX);
+            } else {
+              board[r][c] = createTileData(r, c);
+            }
+          }
+        }
+        // Evitar combinaciones automáticas iniciales
+        let rerollSafety = 0;
+        while (detectMatches().length > 0 && rerollSafety < 50) {
+          const matches = detectMatches();
+          matches.forEach(group => {
+            group.forEach(m => {
+              if (board[m.r] && board[m.r][m.c] && board[m.r][m.c].obstacle === OBSTACLE_TYPES.NONE) {
+                board[m.r][m.c] = createTileData(m.r, m.c);
+              }
+            });
+          });
+          rerollSafety++;
+        }
+        valid = true;
+      }
+
+      renderObjectivesUI();
+      renderBoardGrid();
+    }
+
+    function renderObjectivesUI() {
+      const container = document.getElementById('objectivesContainer');
+      container.innerHTML = '';
+      levelObjectives.forEach(obj => {
+        const remaining = Math.max(0, obj.target - obj.current);
+        const item = document.createElement('div');
+        item.className = 'flex items-center space-x-1 bg-black/40 px-2 py-0.5 rounded-lg border border-yellow-400/50';
+        item.innerHTML = `
+          <span class="text-base">${obj.icon}</span>
+          <span class="font-royal text-sm text-yellow-300">${remaining}</span>
+        `;
+        container.appendChild(item);
+      });
+      document.getElementById('movesRemainingText').innerText = movesLeft;
+    }
+
+    const boardGridEl = document.getElementById('boardGrid');
+
+    function renderBoardGrid() {
+      boardGridEl.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const tile = board[r][c];
+          const tileDiv = document.createElement('div');
+          tileDiv.className = 'tile relative flex items-center justify-center rounded-xl font-bold cursor-pointer select-none';
+          tileDiv.dataset.r = r;
+          tileDiv.dataset.c = c;
+
+          if (tile) {
+            // Caso 1: Obstáculo (Caja de Madera Real)
+            if (tile.obstacle === OBSTACLE_TYPES.WOOD_BOX) {
+              tileDiv.classList.add('bg-amber-900', 'border-2', 'border-amber-700', 'shadow-inner');
+              tileDiv.innerHTML = `<span class="text-2xl filter drop-shadow">📦</span>`;
+            } 
+            // Caso 2: Booster especial
+            else if (tile.booster !== BOOSTERS.NONE) {
+              tileDiv.classList.add('bg-purple-900', 'border-2', 'border-yellow-300', 'booster-shine');
+              if (tile.booster === BOOSTERS.ROCKET_H) {
+                tileDiv.innerHTML = `<span class="text-2xl">🚀↔️</span>`;
+              } else if (tile.booster === BOOSTERS.ROCKET_V) {
+                tileDiv.innerHTML = `<span class="text-2xl">🚀↕️</span>`;
+              } else if (tile.booster === BOOSTERS.BOMB) {
+                tileDiv.innerHTML = `<span class="text-2xl">💣</span>`;
+              } else if (tile.booster === BOOSTERS.LIGHT_BALL) {
+                tileDiv.innerHTML = `<span class="text-3xl animate-spin-slow">🧶✨</span>`;
+              }
+            } 
+            // Caso 3: Mascota normal
+            else if (tile.petType !== null) {
+              const pet = PET_PIECES[tile.petType];
+              tileDiv.classList.add(pet.bg, 'border-2', pet.border);
+              tileDiv.innerHTML = `<span class="text-2xl sm:text-3xl filter drop-shadow-sm">${pet.icon}</span>`;
+            }
+
+            // Resaltar seleccionado
+            if (selectedTile && selectedTile.r === r && selectedTile.c === c) {
+              tileDiv.classList.add('selected');
+            }
+          }
+
+          // Listeners táctiles y ratón
+          tileDiv.addEventListener('click', () => handleTileInteraction(r, c));
+          tileDiv.addEventListener('touchstart', (e) => handleTouchStart(e, r, c), { passive: true });
+          tileDiv.addEventListener('touchend', (e) => handleTouchEnd(e, r, c), { passive: true });
+
+          boardGridEl.appendChild(tileDiv);
+        }
+      }
+    }
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    function handleTouchStart(e, r, c) {
+      if (isBoardLocked) return;
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+      handleTileInteraction(r, c);
+    }
+
+    function handleTouchEnd(e, r, c) {
+      if (isBoardLocked || !selectedTile) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const threshold = 22;
+
+      if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
+        let tr = r;
+        let tc = c;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          tc += dx > 0 ? 1 : -1;
+        } else {
+          tr += dy > 0 ? 1 : -1;
+        }
+
+        if (tr >= 0 && tr < ROWS && tc >= 0 && tc < COLS) {
+          executeTileSwap(selectedTile, { r: tr, c: tc });
+        }
+      }
+    }
+
+    function handleTileInteraction(r, c) {
+      RoyalAudio.init();
+      if (isBoardLocked) return;
+
+      // Uso de herramientas portátiles (Martillo, etc.)
+      if (activeTool) {
+        applyPortableTool(r, c);
+        return;
+      }
+
+      if (!selectedTile) {
+        selectedTile = { r, c };
+        RoyalAudio.playPop(0);
+        renderBoardGrid();
+        return;
+      }
+
+      // Deseleccionar si es la misma celda
+      if (selectedTile.r === r && selectedTile.c === c) {
+        selectedTile = null;
+        renderBoardGrid();
+        return;
+      }
+
+      // Comprobar si son adyacentes
+      const isNeighbor = Math.abs(selectedTile.r - r) + Math.abs(selectedTile.c - c) === 1;
+      if (isNeighbor) {
+        executeTileSwap(selectedTile, { r, c });
+      } else {
+        selectedTile = { r, c };
+        RoyalAudio.playPop(1);
+        renderBoardGrid();
+      }
+    }
+
+    async function executeTileSwap(posA, posB) {
+      isBoardLocked = true;
+      RoyalAudio.playSwap();
+
+      // Intercambiar en la matriz
+      const temp = board[posA.r][posA.c];
+      board[posA.r][posA.c] = board[posB.r][posB.c];
+      board[posB.r][posB.c] = temp;
+      board[posA.r][posA.c].r = posA.r;
+      board[posA.r][posA.c].c = posA.c;
+      board[posB.r][posB.c].r = posB.r;
+      board[posB.r][posB.c].c = posB.c;
+
+      selectedTile = null;
+      renderBoardGrid();
+      await sleep(190);
+
+      const tileA = board[posA.r][posA.c];
+      const tileB = board[posB.r][posB.c];
+
+      // Caso Combo de Boosters (ej. Bomba + Cohete, o Bola de Luz)
+      let specialComboUsed = false;
+      if (tileA.booster !== BOOSTERS.NONE || tileB.booster !== BOOSTERS.NONE) {
+        specialComboUsed = await checkBoosterCombination(posA, posB);
+      }
+
+      const matches = detectMatches();
+
+      if (!specialComboUsed && matches.length === 0) {
+        // Revertir movimiento inválido
+        const rollback = board[posA.r][posA.c];
+        board[posA.r][posA.c] = board[posB.r][posB.c];
+        board[posB.r][posB.c] = rollback;
+        board[posA.r][posA.c].r = posA.r;
+        board[posA.r][posA.c].c = posA.c;
+        board[posB.r][posB.c].r = posB.r;
+        board[posB.r][posB.c].c = posB.c;
+
+        renderBoardGrid();
+        await sleep(180);
+        isBoardLocked = false;
+        return;
+      }
+
+      // Consumir movimiento
+      movesLeft--;
+      document.getElementById('movesRemainingText').innerText = movesLeft;
+
+      let cascadeChain = 1;
+      await resolveCascades(cascadeChain);
+
+      isBoardLocked = false;
+      checkLevelStatus();
+    }
+
+    async function checkBoosterCombination(posA, posB) {
+      const bA = board[posA.r][posA.c].booster;
+      const bB = board[posB.r][posB.c].booster;
+
+      // 1. Bola de Luz + Cualquier pieza o Booster
+      if (bA === BOOSTERS.LIGHT_BALL || bB === BOOSTERS.LIGHT_BALL) {
+        const lightPos = bA === BOOSTERS.LIGHT_BALL ? posA : posB;
+        const otherTile = bA === BOOSTERS.LIGHT_BALL ? board[posB.r][posB.c] : board[posA.r][posA.c];
+        await activateLightBall(lightPos, otherTile.petType);
+        return true;
+      }
+
+      // 2. Cohete + Bomba: Gran Cruz Triple
+      if ((bA === BOOSTERS.BOMB && (bB === BOOSTERS.ROCKET_H || bB === BOOSTERS.ROCKET_V)) ||
+          (bB === BOOSTERS.BOMB && (bA === BOOSTERS.ROCKET_H || bA === BOOSTERS.ROCKET_V))) {
+        await activateCrossSuperExplosion(posB.r, posB.c);
+        return true;
+      }
+
+      // 3. Booster individual detonado
+      if (bA !== BOOSTERS.NONE) {
+        await activateBooster(posA.r, posA.c, bA);
+        return true;
+      }
+      if (bB !== BOOSTERS.NONE) {
+        await activateBooster(posB.r, posB.c, bB);
+        return true;
+      }
+
+      return false;
+    }
+
+    function detectMatches() {
+      const matchGroups = [];
+
+      // Horizontales
+      for (let r = 0; r < ROWS; r++) {
+        let count = 1;
+        for (let c = 0; c < COLS; c++) {
+          const tCur = board[r][c];
+          const tNext = c < COLS - 1 ? board[r][c + 1] : null;
+
+          const matchable = tCur && tNext && 
+            tCur.obstacle === OBSTACLE_TYPES.NONE && 
+            tNext.obstacle === OBSTACLE_TYPES.NONE &&
+            tCur.petType !== null && 
+            tCur.petType === tNext.petType;
+
+          if (matchable) {
+            count++;
+          } else {
+            if (count >= 3) {
+              const group = [];
+              for (let k = c - count + 1; k <= c; k++) {
+                group.push({ r, c: k });
+              }
+              matchGroups.push(group);
+            }
+            count = 1;
+          }
+        }
+      }
+
+      // Verticales
+      for (let c = 0; c < COLS; c++) {
+        let count = 1;
+        for (let r = 0; r < ROWS; r++) {
+          const tCur = board[r][c];
+          const tNext = r < ROWS - 1 ? board[r + 1][c] : null;
+
+          const matchable = tCur && tNext && 
+            tCur.obstacle === OBSTACLE_TYPES.NONE && 
+            tNext.obstacle === OBSTACLE_TYPES.NONE &&
+            tCur.petType !== null && 
+            tCur.petType === tNext.petType;
+
+          if (matchable) {
+            count++;
+          } else {
+            if (count >= 3) {
+              const group = [];
+              for (let k = r - count + 1; k <= r; k++) {
+                group.push({ r: k, c });
+              }
+              matchGroups.push(group);
+            }
+            count = 1;
+          }
+        }
+      }
+
+      return matchGroups;
+    }
+
+    async function resolveCascades(chain = 1) {
+      const matches = detectMatches();
+      if (matches.length === 0) return;
+
+      const tilesToClear = new Map();
+      const newBoosters = [];
+
+      matches.forEach(group => {
+        group.forEach(pos => {
+          tilesToClear.set(`${pos.r},${pos.c}`, pos);
+        });
+
+        // Creación de Boosters según tamaño de combinación (Royal Match Style)
+        if (group.length === 4) {
+          const center = group[1];
+          const type = Math.random() > 0.5 ? BOOSTERS.ROCKET_H : BOOSTERS.ROCKET_V;
+          newBoosters.push({ r: center.r, c: center.c, booster: type });
+        } else if (group.length >= 5) {
+          const center = group[2];
+          newBoosters.push({ r: center.r, c: center.c, booster: BOOSTERS.LIGHT_BALL });
+        } else if (group.length === 3 && Math.random() < 0.15) {
+          // Ocasional bomba en cruces
+        }
+      });
+
+      RoyalAudio.playPop(chain);
+      if (chain > 1) {
+        showFeedbackPopup(`COMBO x${chain}!`, window.innerWidth / 2, window.innerHeight * 0.45);
+      }
+
+      // Limpiar obstáculos adyacentes (Cajas)
+      tilesToClear.forEach(pos => {
+        damageAdjacentObstacles(pos.r, pos.c);
+        trackObjectiveProgress('pet', board[pos.r][pos.c].petType);
+      });
+
+      // Animaciones de eliminación
+      tilesToClear.forEach(pos => {
+        const el = document.querySelector(`[data-r="${pos.r}"][data-c="${pos.c}"]`);
+        if (el) {
+          el.classList.add('pop-out');
+          const rect = el.getBoundingClientRect();
+          const wrapRect = document.getElementById('boardWrapper').getBoundingClientRect();
+          triggerConfetti(
+            rect.left - wrapRect.left + rect.width / 2,
+            rect.top - wrapRect.top + rect.height / 2,
+            8
+          );
+        }
+      });
+
+      await sleep(220);
+
+      // Eliminar del modelo
+      tilesToClear.forEach(pos => {
+        board[pos.r][pos.c] = null;
+      });
+
+      // Insertar nuevos boosters creados
+      newBoosters.forEach(b => {
+        board[b.r][b.c] = createTileData(b.r, b.c, null, b.booster, OBSTACLE_TYPES.NONE);
+      });
+
+      // Gravedad: Caída y relleno
+      for (let c = 0; c < COLS; c++) {
+        let targetRow = ROWS - 1;
+        for (let r = ROWS - 1; r >= 0; r--) {
+          if (board[r][c] !== null) {
+            if (board[r][c].obstacle === OBSTACLE_TYPES.WOOD_BOX) {
+              targetRow = r - 1; // Las cajas pesadas no caen
+              continue;
+            }
+            if (targetRow !== r) {
+              board[targetRow][c] = board[r][c];
+              board[targetRow][c].r = targetRow;
+              board[r][c] = null;
+            }
+            targetRow--;
+          }
+        }
+        // Rellenar vacíos superiores
+        while (targetRow >= 0) {
+          if (board[targetRow][c] === null) {
+            board[targetRow][c] = createTileData(targetRow, c);
+          }
+          targetRow--;
+        }
+      }
+
+      renderObjectivesUI();
+      renderBoardGrid();
+      await sleep(200);
+
+      // Próxima cascada
+      await resolveCascades(chain + 1);
+    }
+
+    function damageAdjacentObstacles(r, c) {
+      const deltas = [[0,1], [0,-1], [1,0], [-1,0]];
+      deltas.forEach(([dr, dc]) => {
+        const nr = r + dr;
+        const nc = c + dc;
+        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+          const neighbor = board[nr][nc];
+          if (neighbor && neighbor.obstacle === OBSTACLE_TYPES.WOOD_BOX) {
+            neighbor.obstacle = OBSTACLE_TYPES.NONE;
+            neighbor.petType = Math.floor(Math.random() * PET_PIECES.length);
+            trackObjectiveProgress('box');
+            RoyalAudio.playExplosion();
+          }
+        }
+      });
+    }
+
+    async function activateBooster(r, c, type) {
+      RoyalAudio.playExplosion();
+      triggerScreenShake();
+
+      board[r][c].booster = BOOSTERS.NONE;
+
+      if (type === BOOSTERS.ROCKET_H) {
+        RoyalAudio.playRocket();
+        for (let col = 0; col < COLS; col++) {
+          clearSingleCell(r, col);
+        }
+      } else if (type === BOOSTERS.ROCKET_V) {
+        RoyalAudio.playRocket();
+        for (let row = 0; row < ROWS; row++) {
+          clearSingleCell(row, c);
+        }
+      } else if (type === BOOSTERS.BOMB) {
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            const nr = r + dr;
+            const nc = c + dc;
+            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+              clearSingleCell(nr, nc);
+            }
+          }
+        }
+      }
+
+      renderBoardGrid();
+      await sleep(200);
+      await resolveCascades(1);
+    }
+
+    async function activateCrossSuperExplosion(r, c) {
+      RoyalAudio.playExplosion();
+      triggerScreenShake();
+      showFeedbackPopup('¡MEGA COHETE REAL!', window.innerWidth / 2, window.innerHeight * 0.4);
+
+      // Limpia 3 filas y 3 columnas
+      for (let row = Math.max(0, r - 1); row <= Math.min(ROWS - 1, r + 1); row++) {
+        for (let col = 0; col < COLS; col++) clearSingleCell(row, col);
+      }
+      for (let col = Math.max(0, c - 1); col <= Math.min(COLS - 1, c + 1); col++) {
+        for (let row = 0; row < ROWS; row++) clearSingleCell(row, col);
+      }
+
+      renderBoardGrid();
+      await sleep(220);
+      await resolveCascades(1);
+    }
+
+    async function activateLightBall(ballPos, targetPetType) {
+      RoyalAudio.playVictoryFanfare();
+      showFeedbackPopup('¡OVILLO MÁGICO!', window.innerWidth / 2, window.innerHeight * 0.4);
+
+      board[ballPos.r][ballPos.c] = null;
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const t = board[r][c];
+          if (t && t.petType === targetPetType) {
+            clearSingleCell(r, c);
+          }
+        }
+      }
+
+      renderBoardGrid();
+      await sleep(250);
+      await resolveCascades(1);
+    }
+
+    function clearSingleCell(r, c) {
+      const t = board[r][c];
+      if (!t) return;
+
+      if (t.obstacle === OBSTACLE_TYPES.WOOD_BOX) {
+        trackObjectiveProgress('box');
+      } else if (t.petType !== null) {
+        trackObjectiveProgress('pet', t.petType);
+      }
+      board[r][c] = null;
+    }
+
+    document.getElementById('btnBoosterHammer').addEventListener('click', () => {
+      if (inventory.hammer > 0) {
+        activeTool = 'hammer';
+        showFeedbackPopup('¡TOCA UNA CASILLA CON EL MARTILLO!', window.innerWidth / 2, window.innerHeight * 0.45);
+      }
+    });
+
+    document.getElementById('btnBoosterRocket').addEventListener('click', () => {
+      if (inventory.rocket > 0) {
+        activeTool = 'rocket';
+        showFeedbackPopup('¡TOCA UNA CASILLA PARA EL COHETE!', window.innerWidth / 2, window.innerHeight * 0.45);
+      }
+    });
+
+    document.getElementById('btnBoosterBomb').addEventListener('click', () => {
+      if (inventory.bomb > 0) {
+        activeTool = 'bomb';
+        showFeedbackPopup('¡TOCA UNA CASILLA PARA LA BOMBA!', window.innerWidth / 2, window.innerHeight * 0.45);
+      }
+    });
+
+    async function applyPortableTool(r, c) {
+      if (!activeTool) return;
+      const tool = activeTool;
+      activeTool = null;
+
+      if (tool === 'hammer' && inventory.hammer > 0) {
+        inventory.hammer--;
+        RoyalAudio.playExplosion();
+        triggerScreenShake();
+        clearSingleCell(r, c);
+      } else if (tool === 'rocket' && inventory.rocket > 0) {
+        inventory.rocket--;
+        await activateBooster(r, c, BOOSTERS.ROCKET_H);
+        return;
+      } else if (tool === 'bomb' && inventory.bomb > 0) {
+        inventory.bomb--;
+        await activateBooster(r, c, BOOSTERS.BOMB);
+        return;
+      }
+
+      updateCurrencyUI();
+      renderBoardGrid();
+      await sleep(200);
+      await resolveCascades(1);
+      checkLevelStatus();
+    }
+
+    function trackObjectiveProgress(type, val = null) {
+      levelObjectives.forEach(obj => {
+        if (obj.type === type) {
+          if (type === 'pet' && obj.petId === val) {
+            obj.current++;
+          } else if (type === 'box') {
+            obj.current++;
+          }
+        }
+      });
+      renderObjectivesUI();
+    }
+
+    function checkLevelStatus() {
+      const allCompleted = levelObjectives.every(obj => obj.current >= obj.target);
+
+      if (allCompleted) {
+        RoyalAudio.playVictoryFanfare();
+        playerStars += 1;
+        playerCoins += 100;
+        updateCurrencyUI();
+
+        showRoyalModal(
+          '👑',
+          inNightmareMode ? '¡REY RESCATADO!' : '¡VICTORIA REAL!',
+          inNightmareMode ? '¡Has salvado al Rey Patitas del peligro inminente!' : '¡Mascotas rescatadas y reino seguro!',
+          1,
+          100,
+          () => {
+            hideRoyalModal();
+            if (!inNightmareMode) currentLevelNumber++;
+            showPalaceView();
+          }
+        );
+      } else if (movesLeft <= 0) {
+        RoyalAudio.playExplosion();
+        showRoyalModal(
+          '😿',
+          '¡NIVEL FALLIDO!',
+          'Te has quedado sin movimientos para ayudar a los cachorros.',
+          0,
+          0,
+          () => {
+            hideRoyalModal();
+            startLevel(currentLevelNumber, inNightmareMode);
+          },
+          'REINTENTAR 🔄'
+        );
+      }
+    }
+
+    function triggerScreenShake() {
+      const el = document.getElementById('boardWrapper');
+      el.classList.add('shake-fx');
+      setTimeout(() => el.classList.remove('shake-fx'), 350);
+    }
+
+    function showFeedbackPopup(text, x, y) {
+      const tag = document.createElement('div');
+      tag.className = 'float-feedback text-yellow-300 text-2xl font-black';
+      tag.innerText = text;
+      tag.style.left = `${x}px`;
+      tag.style.top = `${y}px`;
+      document.body.appendChild(tag);
+      setTimeout(() => tag.remove(), 900);
+    }
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCard = document.getElementById('modalCard');
+
+    function showRoyalModal(crown, title, desc, stars, coins, onAction, btnLabel = '¡CONTINUAR!') {
+      document.getElementById('modalCrownHeader').innerText = crown;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalDescription').innerText = desc;
+      document.getElementById('modalStarsEarned').innerText = `+${stars}`;
+      document.getElementById('modalCoinsEarned').innerText = `+${coins}`;
+
+      const btn = document.getElementById('modalPrimaryBtn');
+      btn.innerText = btnLabel;
+      btn.onclick = onAction;
+
+      modalOverlay.classList.remove('hidden');
+      setTimeout(() => {
+        modalOverlay.classList.remove('opacity-0');
+        modalCard.classList.remove('scale-90');
+        modalCard.classList.add('scale-100');
+      }, 10);
+    }
+
+    function hideRoyalModal() {
+      modalOverlay.classList.add('opacity-0');
+      modalCard.classList.remove('scale-100');
+      modalCard.classList.add('scale-90');
+      setTimeout(() => modalOverlay.classList.add('hidden'), 280);
+    }
+
+    function sleep(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    document.getElementById('btnSoundToggle').addEventListener('click', () => {
+      RoyalAudio.init();
+      RoyalAudio.muted = !RoyalAudio.muted;
+      document.getElementById('soundIcon').innerText = RoyalAudio.muted ? '🔇' : '🔊';
+    });
+
+    window.onload = () => {
+      updateCurrencyUI();
+      resizeFxCanvas();
+    };
+  </script>
+</body>
+</html>
